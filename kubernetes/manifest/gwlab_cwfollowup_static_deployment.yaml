@@ -1,0 +1,35 @@
+---
+# 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gwlab-cwfollowup-static
+  namespace: gwcloud
+  labels:
+    name: gwlab-cwfollowup-static
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        name: gwlab-cwfollowup-static
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        name: gwlab-cwfollowup-static
+    spec:
+      containers:
+        - name: gwlab-cwfollowup-static
+          image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_static:0.1
+          ports:
+            - name: http
+              containerPort: 8000
+          resources: {}
+          tty: true
+      imagePullSecrets:
+      - name: regcred
+... 

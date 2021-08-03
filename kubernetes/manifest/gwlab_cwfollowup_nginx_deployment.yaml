@@ -1,0 +1,35 @@
+---
+# 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gwlab-cwfollowup-nginx
+  namespace: gwcloud
+  labels:
+    name: gwlab-cwfollowup-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+        name: gwlab-cwfollowup-nginx
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        name: gwlab-cwfollowup-nginx
+    spec:
+      containers:
+        - name: gwlab-cwfollowup-nginx
+          image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_nginx:0.1
+          ports:
+            - name: http
+              containerPort: 8000
+          resources: {}
+          tty: true
+      imagePullSecrets:
+      - name: regcred
+... 

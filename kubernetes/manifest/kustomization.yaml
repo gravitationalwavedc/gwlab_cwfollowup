@@ -1,0 +1,9 @@
+resources:
+  - gwlab_cwfollowup_vault_secrets_integrator.yaml
+  - gwlab_cwfollowup_vault_rbac.yaml
+  - gwlab_cwfollowup_django_deployment.yaml
+  - gwlab_cwfollowup_django_service.yaml
+  - gwlab_cwfollowup_nginx_deployment.yaml
+  - gwlab_cwfollowup_nginx_service.yaml
+  - gwlab_cwfollowup_static_deployment.yaml
+  - gwlab_cwfollowup_static_service.yaml
