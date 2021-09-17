@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import {createPaginationContainer, graphql} from 'react-relay';
 import { Button, Container, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import { HiOutlineSearch, HiOutlinePlus } from 'react-icons/hi';
-import Link from 'found/Link';
 import JobTable from '../Components/JobTable';
 
 const RECORDS_PER_PAGE = 100;
 
-const PublicJobs = ({data, match, router, relay}) => {
+const PublicViterbiJobsList = ({data, match, router, relay}) => {
     const [search, setSearch] = useState('');
     const [timeRange, setTimeRange] = useState('1d');
     const [order, setOrder] = useState();
@@ -41,32 +40,13 @@ const PublicJobs = ({data, match, router, relay}) => {
     ];
 
     return (
-        <Container >
-            <h1 className="pt-5 mb-4">
-            Public Jobs
-                <span className="float-right">
-                    <Link 
-                        as={Button}
-                        variant="outline-primary"
-                        to='/cwfollowup/job-list/' 
-                        exact 
-                        match={match} 
-                        router={router} 
-                        className="mr-1">
-                          Switch to my jobs
-                    </Link>
-                    <Link as={Button} to='/cwfollowup/job-form/' exact match={match} router={router}>
-                        <HiOutlinePlus size={18} className="mb-1 mr-1"/>
-                        Start a new job 
-                    </Link>
-                </span>
-            </h1>
+        <Container>
             <Form>
                 <Form.Row>
                     <Col lg={3}>
                         <Form.Group controlId="searchJobs">
                             <Form.Label srOnly>
-                              Search
+                                Search
                             </Form.Label>
                             <InputGroup>
                                 <InputGroup.Prepend>
@@ -84,7 +64,7 @@ const PublicJobs = ({data, match, router, relay}) => {
                     <Col lg={3}>
                         <Form.Group controlId="timeRange">
                             <Form.Label srOnly>
-                              Time
+                                Time
                             </Form.Label>
                             <Form.Control 
                                 as="select" 
@@ -106,7 +86,7 @@ const PublicJobs = ({data, match, router, relay}) => {
             <Row>
                 <Col>
                     <JobTable
-                        data={data.publicCwfollowupJobs}
+                        data={data.publicViterbiJobs}
                         setOrder={setOrder} 
                         order={order} 
                         setDirection={setDirection} 
@@ -122,16 +102,16 @@ const PublicJobs = ({data, match, router, relay}) => {
     );
 };
 
-export default createPaginationContainer(PublicJobs,
+export default createPaginationContainer(PublicViterbiJobsList,
     {
         data: graphql`
-            fragment PublicJobs_data on Query {
-                publicCwfollowupJobs(
+            fragment PublicViterbiJobsList_data on Query {
+                publicViterbiJobs (
                     first: $count,
                     after: $cursor,
                     search: $search,
                     timeRange: $timeRange
-                ) @connection(key: "PublicJobs_publicCwfollowupJobs") {
+                ) @connection(key: "PublicViterbiJobsList_publicViterbiJobs") {
                     pageInfo {
                       hasNextPage
                       endCursor
@@ -139,15 +119,7 @@ export default createPaginationContainer(PublicJobs,
                     edges {
                         node {
                             id
-                            user
                             name
-                            description
-                            jobStatus {
-                              name
-                            }
-                            labels {
-                                name
-                            }
                         }
                     }
                 }
@@ -157,18 +129,18 @@ export default createPaginationContainer(PublicJobs,
     {
         direction: 'forward',
         query: graphql`
-            query PublicJobsForwardQuery(
+            query PublicViterbiJobsListForwardQuery(
                 $count: Int!,
                 $cursor: String,
                 $search: String,
                 $timeRange: String
             ) {
-              ...PublicJobs_data
+              ...PublicViterbiJobsList_data
             }
         `,
 
         getConnectionFromProps(props) {
-            return props.data && props.data.publicCwfollowupJobs;
+            return props.data && props.data.publicViterbiJobs;
         },
 
         getFragmentVariables(previousVariables, totalCount) {

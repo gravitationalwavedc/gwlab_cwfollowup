@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import {createPaginationContainer, graphql} from 'react-relay';
 import { Button, Container, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import { HiOutlineSearch, HiOutlinePlus } from 'react-icons/hi';
-import Link from 'found/Link';
 import JobTable from '../Components/JobTable';
 
 const RECORDS_PER_PAGE = 100;
 
-const MyJobs = ({data, match, router,relay}) => {
+const UserViterbiJobsList = ({data, match, router, relay}) => {
+    console.log(data)
     const [search, setSearch] = useState('');
     const [timeRange, setTimeRange] = useState('1d');
     const [order, setOrder] = useState();
@@ -42,31 +42,12 @@ const MyJobs = ({data, match, router,relay}) => {
 
     return (
         <Container >
-            <h1 className="pt-5 mb-4">
-            My Jobs
-                <span className="float-right">
-                    <Link 
-                        as={Button}
-                        variant="outline-primary"
-                        to='/cwfollowup/' 
-                        exact 
-                        match={match}
-                        router={router}
-                        className="mr-1">
-                Switch to public jobs
-                    </Link>
-                    <Link as={Button} to='/cwfollowup/job-form/' exact match={match} router={router}>
-                        <HiOutlinePlus size={18} className="mb-1 mr-1"/>
-                Start a new job 
-                    </Link>
-                </span>
-            </h1>
             <Form>
                 <Form.Row>
                     <Col lg={3}>
                         <Form.Group controlId="searchJobs">
                             <Form.Label srOnly>
-                    Search
+                                Search
                             </Form.Label>
                             <InputGroup>
                                 <InputGroup.Prepend>
@@ -84,7 +65,7 @@ const MyJobs = ({data, match, router,relay}) => {
                     <Col lg={3}>
                         <Form.Group controlId="timeRange">
                             <Form.Label srOnly>
-                    Time
+                                Time
                             </Form.Label>
                             <Form.Control 
                                 as="select" 
@@ -104,7 +85,7 @@ const MyJobs = ({data, match, router,relay}) => {
             <Row>
                 <Col>
                     <JobTable
-                        data={data.cwfollowupJobs} 
+                        data={data.viterbiJobs} 
                         setOrder={setOrder} 
                         order={order} 
                         setDirection={setDirection} 
@@ -121,15 +102,15 @@ const MyJobs = ({data, match, router,relay}) => {
     );
 };
 
-export default createPaginationContainer(MyJobs,
+export default createPaginationContainer(UserViterbiJobsList,
     {
         data: graphql`
-            fragment MyJobs_data on Query {
-                cwfollowupJobs(
+            fragment UserViterbiJobsList_data on Query {
+                viterbiJobs(
                     first: $count,
                     after: $cursor,
                     orderBy: $orderBy
-                ) @connection(key: "MyJobs_cwfollowupJobs") {
+                ) @connection(key: "UserViterbiJobsList_viterbiJobs") {
                     edges {
                         node {
                             id
@@ -151,16 +132,16 @@ export default createPaginationContainer(MyJobs,
     {
         direction: 'forward',
         query: graphql`
-            query MyJobsForwardQuery(
+            query UserViterbiJobsListForwardQuery(
                 $count: Int!,
                 $cursor: String,
                 $orderBy: String
             ) {
-              ...MyJobs_data
+              ...UserViterbiJobsList_data
             }
         `,
         getConnectionFromProps(props) {
-            return props.data && props.data.cwfollowupJobs;
+            return props.data && props.data.viterbiJobs;
         },
 
         getFragmentVariables(previousVariables, totalCount) {

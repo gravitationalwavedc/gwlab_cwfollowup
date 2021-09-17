@@ -53,13 +53,29 @@ const JobTable = ({data, match, router, hasMore, loadMore, myJobs}) => (
                             key={node.id}
                             size="sm" 
                             variant="outline-primary" 
-                            to={{pathname: '/cwfollowup/job-results/' + node.id + '/'}} 
+                            to={{
+                                pathname: '/cwfollowup/new-job/job-form/',
+                                state: {
+                                    jobId: node.id
+                                }
+                            }}
                             activeClassName="selected" 
                             exact 
                             match={match} 
                             router={router}>
                               View
                         </Link>
+                        {/* <Link 
+                            key={node.id}
+                            size="sm" 
+                            variant="outline-primary" 
+                            to={{pathname: '/cwfollowup/job-results/' + node.id + '/'}} 
+                            activeClassName="selected" 
+                            exact 
+                            match={match} 
+                            router={router}>
+                              View
+                        </Link> */}
                     </td>
                 </tr>)
                     : <tr><td colSpan='5'>Create a new job or try searching 'Any time'.</td></tr>}

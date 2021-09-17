@@ -1,14 +1,13 @@
 import React from 'react';
 import {Route} from 'found';
-import MyJobs from './Pages/MyJobs';
-import PublicJobs from './Pages/PublicJobs';
 import {graphql} from 'react-relay';
 import {harnessApi} from './index';
 import NewJob from './Pages/NewJob';
-import DuplicateJobForm from './Components/Forms/DuplicateJobForm';
-import ViewJob from './Pages/ViewJob';
+import FormTabs from './Components/Forms/FormTabs';
+import TestPage from './Pages/TestPage';
 import Loading from './Components/Loading';
 import {RedirectException} from 'found';
+import HomePage from './Pages/HomePage';
 
 const handleRender = ({Component, props}) => {
     if (!Component || !props)
@@ -16,7 +15,7 @@ const handleRender = ({Component, props}) => {
 
     if (!harnessApi.hasAuthToken())
         throw new RedirectException('/auth/?next=' + props.match.location.pathname);
-  
+    
     return <Component data={props} {...props}/>;
 };
 
@@ -24,20 +23,40 @@ function getRoutes() {
     return (
         <Route>
             <Route
-                Component={PublicJobs}
+                Component={HomePage}
+                render={handleRender}/>
+            <Route
+                path="testpage"
                 query={graphql`
-                query Routes_HomePage_Query (
-                  $count: Int!,
-                  $cursor: String,
-                  $search: String,
-                  $timeRange: String,
-                ) {
-                    gwclouduser {
-                      username
+                    query Routes_TestPage_Query ($jobId: ID!){
+                      ...TestPage_data @arguments(jobId: $jobId)
                     }
-                    ...PublicJobs_data
+                `}
+                prepareVariables={(params, {location}) => {
+
+                    console.log("hello", params)
+                    return {
+                    
+                    jobId: "Vml0ZXJiaUpvYk5vZGU6Mg=="
                 }
-              `}
+                }}
+                environment={harnessApi.getEnvironment('cwfollowup')}
+                Component={TestPage}
+                render={handleRender}/>
+            <Route
+                path="new-job"
+                Component={NewJob}
+                query={graphql`
+                    query Routes_NewJob_Query (
+                    $count: Int!,
+                    $cursor: String,
+                    $search: String,
+                    $timeRange: String,
+                    $orderBy: String
+                    ) {
+                        ...NewJob_data
+                    }
+                `}
                 prepareVariables={() => ({
                     timeRange: 'all',
                     count: 100
@@ -45,10 +64,20 @@ function getRoutes() {
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 render={handleRender}/>
             <Route
-                path="job-form"
-                Component={NewJob}
-                render={handleRender}/>
-            <Route
+                path="new-job/job-form/"
+                Component={FormTabs}
+                query={graphql`
+                    query Routes_FormTabs_Query ($jobId: ID!){
+                        ...FormTabs_data @arguments(jobId: $jobId)
+                    }
+                `}
+                prepareVariables={(params, {location}) => ({
+                    jobId: location.state && location.state.jobId ? location.state.jobId : ''
+                })}
+                environment={harnessApi.getEnvironment('cwfollowup')}
+                render={handleRender}
+            />
+            {/* <Route
                 path="job-form/duplicate/"
                 query={graphql`
                     query Routes_JobForm_Query ($jobId: ID!){
@@ -60,8 +89,8 @@ function getRoutes() {
                 })}
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 Component={DuplicateJobForm}
-                render={handleRender}/>
-            <Route
+                render={handleRender}/> */}
+            {/* <Route
                 path="job-list"
                 query={graphql`
                     query Routes_JobList_Query(
@@ -78,8 +107,8 @@ function getRoutes() {
                 })}
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 Component={MyJobs}
-                render={handleRender}/>
-            <Route
+                render={handleRender}/> */}
+            {/* <Route
                 path="job-results/:jobId/"
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 Component={ViewJob}
@@ -92,7 +121,7 @@ function getRoutes() {
                     jobId: params.jobId
                 })}
                 render={handleRender}
-            />
+            /> */}
         </Route>
     );
 }

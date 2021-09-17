@@ -1,26 +1,24 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
-const RadioGroup = ({ title, formik, name, options, ...props }) =>
+const Switch = ({ title, formik, name, value, labelOn, labelOff, ...props }) =>
     <React.Fragment>
         <Form.Label>{ title }</Form.Label>
-        {options.map(({label, value}) => 
             <Form.Check 
                 custom 
-                id={ name + label }
-                key={ name + label }
-                label={ label } 
-                type="radio" 
-                name={ name } 
-                value={ value } 
+                id={ name }
+                key={ name }
+                type="switch" 
+                name={ name }
+                label={formik.values[name] ? labelOn : labelOff}
+                value={true}
                 onChange={ formik.handleChange } 
-                checked={ formik.values[name] === value }
+                checked={ formik.values[name] }
                 {...props}
             />
-        )}
         <Form.Control.Feedback type='invalid'>
             {formik.errors[name]}
         </Form.Control.Feedback>
     </React.Fragment>;
 
-export default RadioGroup;
+export default Switch;

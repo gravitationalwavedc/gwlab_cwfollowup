@@ -1,51 +1,30 @@
 from django.contrib import admin
-from .models import CwFollowupJob, DataParameter, Label, SearchParameter, Data, Search
+from .models import CWFollowupJob, ViterbiJob, UploadedCWJob, UploadedCWJobCandidate
 
 
-# Register your models here.
+@admin.register(CWFollowupJob)
+class CWFollowupJobAdmin(admin.ModelAdmin):
+    pass
 
 
-class InlineDataAdmin(admin.TabularInline):
-    model = Data
+class UploadedCWJobCandidateAdmin(admin.TabularInline):
+    model = UploadedCWJobCandidate
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
-class InlineSearchAdmin(admin.TabularInline):
-    model = Search
+@admin.register(UploadedCWJob)
+class UploadedCWJobAdmin(admin.ModelAdmin):
+    inlines = [UploadedCWJobCandidateAdmin, ]
 
 
-class InlineDataParameterAdmin(admin.TabularInline):
-    model = DataParameter
-
-
-class InlineSearchParameterAdmin(admin.TabularInline):
-    model = SearchParameter
-
-
-@admin.register(Data)
-class DataAdmin(admin.ModelAdmin):
-    fields = ['job', 'data_source', 'source_dataset']
-    inlines = (InlineDataParameterAdmin,)
-
-
-@admin.register(Search)
-class SearchAdmin(admin.ModelAdmin):
-    fields = ['job']
-    inlines = (InlineSearchParameterAdmin,)
-
-
-@admin.register(Label)
-class LabelAdmin(admin.ModelAdmin):
-    fields = ['name', 'description']
-
-
-@admin.register(CwFollowupJob)
-class CwFollowupJobAdmin(admin.ModelAdmin):
-    fields = ['name', 'description', 'private', 'job_controller_id', 'labels']
-    filter_horizontal = ('labels',)
-    readonly_fields = ('creation_time', 'last_updated')
-    inlines = (
-        InlineDataAdmin,
-        InlineSearchAdmin,
-        InlineDataParameterAdmin,
-        InlineSearchParameterAdmin
-    )
+@admin.register(ViterbiJob)
+class ViterbiJobAdmin(admin.ModelAdmin):
+    pass

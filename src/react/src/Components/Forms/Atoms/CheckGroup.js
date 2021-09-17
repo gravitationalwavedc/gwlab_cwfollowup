@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
-const RadioGroup = ({ title, formik, name, options }) =>
+const CheckGroup = ({ title, formik, name, options }) =>
     <React.Fragment>
         <Form.Label>{title}</Form.Label>
         {options.map(({label, value}) =>
@@ -14,8 +14,11 @@ const RadioGroup = ({ title, formik, name, options }) =>
                 name={name}
                 value={value}
                 onChange={formik.handleChange}
-                checked={formik.values[name].indexOf(value) !== -1}/>
+                isValid={formik.touched[name] && !formik.errors[name]}
+                isInvalid={!!formik.errors[name]}
+                checked={formik.values[name].indexOf(value) !== -1}
+            />
         )}
     </React.Fragment>;
 
-export default RadioGroup;
+export default CheckGroup;

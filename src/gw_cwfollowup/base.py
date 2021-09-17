@@ -164,3 +164,6 @@ GRAPHQL_JWT = {
 # URL of the job controller - note: No trailing slash
 GWCLOUD_JOB_CONTROLLER_API_URL = "https://gwcloud.org.au/job/apiv1"
 GWCLOUD_AUTH_API_URL = "http://localhost:8000/graphql"
+
+# Viterbi URL
+GWLAB_VITERBI_GRAPHQL_URL = "http://localhost:8002/graphql"
