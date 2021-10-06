@@ -3,7 +3,7 @@ import {Button, Col, Row} from 'react-bootstrap';
 import FormCard from './FormCard';
 import CheckGroup from './Atoms/CheckGroup';
 
-const FollowupsForm = ({formik, handlePageChange}) => {
+const FollowupsForm = ({handlePageChange}) => {
     return (
         <React.Fragment>
             <Row>
@@ -13,7 +13,6 @@ const FollowupsForm = ({formik, handlePageChange}) => {
                             <Col>
                                 <CheckGroup
                                     title="Followups"
-                                    formik={formik}
                                     name="followupChoices"
                                     options={[
                                         {label:'Lines', value: 'lines'},

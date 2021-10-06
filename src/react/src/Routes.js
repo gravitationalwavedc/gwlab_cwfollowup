@@ -4,7 +4,6 @@ import {graphql} from 'react-relay';
 import {harnessApi} from './index';
 import NewJob from './Pages/NewJob';
 import FormTabs from './Components/Forms/FormTabs';
-import TestPage from './Pages/TestPage';
 import Loading from './Components/Loading';
 import {RedirectException} from 'found';
 import HomePage from './Pages/HomePage';
@@ -24,24 +23,6 @@ function getRoutes() {
         <Route>
             <Route
                 Component={HomePage}
-                render={handleRender}/>
-            <Route
-                path="testpage"
-                query={graphql`
-                    query Routes_TestPage_Query ($jobId: ID!){
-                      ...TestPage_data @arguments(jobId: $jobId)
-                    }
-                `}
-                prepareVariables={(params, {location}) => {
-
-                    console.log("hello", params)
-                    return {
-                    
-                    jobId: "Vml0ZXJiaUpvYk5vZGU6Mg=="
-                }
-                }}
-                environment={harnessApi.getEnvironment('cwfollowup')}
-                Component={TestPage}
                 render={handleRender}/>
             <Route
                 path="new-job"

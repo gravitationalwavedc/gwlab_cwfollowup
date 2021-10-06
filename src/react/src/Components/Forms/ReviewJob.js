@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
 import {Button, Col, Row, Table,} from 'react-bootstrap';
 import FormCard from './FormCard';
+import { useFormikContext } from 'formik';
 
-const ReviewJob = ({values, handleSubmit, formik}) => {
+const ReviewJob = () => {
     const [errors, setErrors] = useState([]);
+    const { values, handleSubmit, validateForm } = useFormikContext()
 
     const submitReview = async () => {
-        const errors = await formik.validateForm();
+        const errors = await validateForm();
         setErrors(Object.values(errors));
 
         if (Object.keys(errors).length === 0 && errors.constructor === Object) {
@@ -65,20 +67,16 @@ const ReviewJob = ({values, handleSubmit, formik}) => {
                     </FormCard>
                 </Col>
             </Row>
-            {handleSubmit && <Row className="mb-5">
+            <Row className="mb-5">
                 <Col md={3}>
                     <Button onClick={submitReview}>Submit your job</Button>
                 </Col>
                 <Col>
                     <ul>{errors.map(value => <li className="text-danger" key={value}>{value}</li>)}</ul>
                 </Col>
-            </Row>}
+            </Row>
         </React.Fragment>
     );
-};
-
-ReviewJob.defaultProps = {
-    handleSubmit: null
 };
 
 export default ReviewJob;

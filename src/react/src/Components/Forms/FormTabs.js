@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {Col, Row, Nav, Tab} from 'react-bootstrap';
-import { useFormik } from 'formik';
+import { Formik, Form } from 'formik';
 import JobTitle from './JobTitle';
 import CandidateForm from './CandidateForm';
 import FollowupsForm from './FollowupsForm';
@@ -23,12 +23,6 @@ const submitMutation = graphql`
 const FormTabs = ({ data }) => {
     const jobData = data && data.viterbiJob
     const [key, setKey] = useState(jobData ? "followups" : "uploadCandidate")
-    const formik = useFormik({
-        initialValues: initialValues,
-        validationSchema: validationSchema,
-        onSubmit: (values) => handleJobSubmission(values, jobData)
-    })
-
 
     const handleJobSubmission = (values, jobData) => {
         // The mutation requires all number values to be strings.
@@ -82,64 +76,66 @@ const FormTabs = ({ data }) => {
 
 
     return (
-        <React.Fragment>
-            <Row>
-                <Col md={2}/>
-                <Col md={8} style={{minHeight: '110px'}}>
-                    <JobTitle formik={formik} />
-                </Col>
-            </Row>
-            <Tab.Container id="jobForm" activeKey={key} onSelect={(key) => setKey(key)}>
+        <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={(values) => handleJobSubmission(values, jobData)}
+        >
+            <Form>
+
                 <Row>
-                    <Col md={2}>
-                        <Nav className="flex-column">
-                            {
-                                !jobData && 
-                                <Nav.Item>
-                                    <Nav.Link eventKey="uploadCandidate">
-                                        <h5>Candidate</h5>
-                                        <p>Specify details of candidate</p>
-                                    </Nav.Link>
-                                </Nav.Item>
-                            }
-                            <Nav.Item>
-                                <Nav.Link eventKey="followups">
-                                    <h5>Target Details</h5>
-                                    <p>Specify details of target</p>
-                                </Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="review">
-                                    <h5>Review</h5>
-                                    <p>Finalise and start your job</p>
-                                </Nav.Link>
-                            </Nav.Item>
-                        </Nav>
-                    </Col>
-                    <Col md={8}>
-                        <Tab.Content>
-                            {
-                                !jobData &&
-                                <Tab.Pane eventKey="uploadCandidate">
-                                    <CandidateForm formik={formik} handlePageChange={setKey}/>
-                                </Tab.Pane>
-                            }
-                            <Tab.Pane eventKey="followups">
-                                <FollowupsForm formik={formik} handlePageChange={setKey}/>
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="review">
-                                <ReviewJob 
-                                    formik={formik} 
-                                    values={formik.values} 
-                                    handleSubmit={formik.handleSubmit}
-                                />
-                                {/* Hello */}
-                            </Tab.Pane>
-                        </Tab.Content>
+                    <Col md={2}/>
+                    <Col md={8} style={{minHeight: '110px'}}>
+                        <JobTitle />
                     </Col>
                 </Row>
-            </Tab.Container>
-        </React.Fragment>
+                <Tab.Container id="jobForm" activeKey={key} onSelect={(key) => setKey(key)}>
+                    <Row>
+                        <Col md={2}>
+                            <Nav className="flex-column">
+                                {
+                                    !jobData && 
+                                    <Nav.Item>
+                                        <Nav.Link eventKey="uploadCandidate">
+                                            <h5>Candidate</h5>
+                                            <p>Specify details of candidate</p>
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                }
+                                <Nav.Item>
+                                    <Nav.Link eventKey="followups">
+                                        <h5>Target Details</h5>
+                                        <p>Specify details of target</p>
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link eventKey="review">
+                                        <h5>Review</h5>
+                                        <p>Finalise and start your job</p>
+                                    </Nav.Link>
+                                </Nav.Item>
+                            </Nav>
+                        </Col>
+                        <Col md={8}>
+                            <Tab.Content>
+                                {
+                                    !jobData &&
+                                    <Tab.Pane eventKey="uploadCandidate">
+                                        <CandidateForm handlePageChange={setKey}/>
+                                    </Tab.Pane>
+                                }
+                                <Tab.Pane eventKey="followups">
+                                    <FollowupsForm handlePageChange={setKey}/>
+                                </Tab.Pane>
+                                <Tab.Pane eventKey="review">
+                                    <ReviewJob />
+                                </Tab.Pane>
+                            </Tab.Content>
+                        </Col>
+                    </Row>
+                </Tab.Container>
+            </Form>
+        </Formik>
     )
 }
 
@@ -154,6 +150,9 @@ export default createFragmentContainer(FormTabs,
                     start {
                         name
                         description
+                    }
+                    data {
+                        minStartTime
                     }
                 }
             }

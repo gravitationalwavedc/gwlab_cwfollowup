@@ -1,8 +1,10 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
+import { useFormikContext, getIn } from 'formik';
 
-const Switch = ({ title, formik, name, value, labelOn, labelOff, ...props }) =>
-    <React.Fragment>
+const Switch = ({ title, formik, name, value, labelOn, labelOff, ...props }) => {
+    const { handleChange, values, errors} = useFormikContext()
+    return <React.Fragment>
         <Form.Label>{ title }</Form.Label>
             <Form.Check 
                 custom 
@@ -10,15 +12,15 @@ const Switch = ({ title, formik, name, value, labelOn, labelOff, ...props }) =>
                 key={ name }
                 type="switch" 
                 name={ name }
-                label={formik.values[name] ? labelOn : labelOff}
+                label={getIn(values, name) ? labelOn : labelOff}
                 value={true}
-                onChange={ formik.handleChange } 
-                checked={ formik.values[name] }
+                onChange={ handleChange } 
+                checked={ getIn(values, name) }
                 {...props}
             />
         <Form.Control.Feedback type='invalid'>
-            {formik.errors[name]}
+            {errors[name]}
         </Form.Control.Feedback>
-    </React.Fragment>;
+    </React.Fragment>};
 
 export default Switch;

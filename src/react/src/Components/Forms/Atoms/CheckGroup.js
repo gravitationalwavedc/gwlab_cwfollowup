@@ -1,8 +1,11 @@
 import React from 'react';
-import { Form } from 'react-bootstrap';
 
-const CheckGroup = ({ title, formik, name, options }) =>
-    <React.Fragment>
+import { Form } from 'react-bootstrap';
+import { useFormikContext } from 'formik';
+
+const CheckGroup = ({ title, name, options }) => {
+    const { handleChange, touched, errors, values} = useFormikContext()
+    return <React.Fragment>
         <Form.Label>{title}</Form.Label>
         {options.map(({label, value}) =>
             <Form.Check
@@ -13,12 +16,12 @@ const CheckGroup = ({ title, formik, name, options }) =>
                 type="checkbox"
                 name={name}
                 value={value}
-                onChange={formik.handleChange}
-                isValid={formik.touched[name] && !formik.errors[name]}
-                isInvalid={!!formik.errors[name]}
-                checked={formik.values[name].indexOf(value) !== -1}
+                onChange={handleChange}
+                isValid={touched[name] && !errors[name]}
+                isInvalid={!!errors[name]}
+                checked={values[name].indexOf(value) !== -1}
             />
         )}
-    </React.Fragment>;
+    </React.Fragment>};
 
 export default CheckGroup;

@@ -113,8 +113,8 @@ export default createPaginationContainer(PublicViterbiJobsList,
                     timeRange: $timeRange
                 ) @connection(key: "PublicViterbiJobsList_publicViterbiJobs") {
                     pageInfo {
-                      hasNextPage
-                      endCursor
+                        hasNextPage
+                        endCursor
                     }
                     edges {
                         node {

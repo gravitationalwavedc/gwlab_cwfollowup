@@ -1,8 +1,9 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
-const RadioGroup = ({ title, formik, name, options, ...props }) =>
-    <React.Fragment>
+const RadioGroup = ({ title, formik, name, options, ...props }) => {
+    const { handleChange, values, errors } = useFormikContext()
+    return <React.Fragment>
         <Form.Label>{ title }</Form.Label>
         {options.map(({label, value}) => 
             <Form.Check 
@@ -13,14 +14,14 @@ const RadioGroup = ({ title, formik, name, options, ...props }) =>
                 type="radio" 
                 name={ name } 
                 value={ value } 
-                onChange={ formik.handleChange } 
-                checked={ formik.values[name] === value }
+                onChange={ handleChange } 
+                checked={ values[name] === value }
                 {...props}
             />
         )}
         <Form.Control.Feedback type='invalid'>
-            {formik.errors[name]}
+            {errors[name]}
         </Form.Control.Feedback>
-    </React.Fragment>;
+    </React.Fragment>};
 
 export default RadioGroup;
