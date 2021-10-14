@@ -1,11 +1,10 @@
 import graphene
 from graphene import relay
 from graphene.utils.str_converters import to_snake_case
-# from graphql_jwt.decorators import login_required
 
-from .types import ViterbiStartType, ViterbiDataType, ViterbiLabelType, ViterbiJobStatusType, \
-                    ViterbiJobInputType, UploadedDataInputType
-from .views import create_followup_job, perform_viterbi_query
+from .types import ViterbiStartType, ViterbiDataType, ViterbiLabelType, ViterbiJobStatusType
+from .views import create_followup_job, perform_viterbi_query, get_viterbi_candidates
+from .utils.generate_viterbi_query import generate_viterbi_query
 
 
 def recursively_map_dict_keys(func, obj):
@@ -17,33 +16,13 @@ def recursively_map_dict_keys(func, obj):
         return obj
 
 
-# @login_required
-def viterbi_resolvers(name):
-    def func(parent, info, **kwargs):
-        request_data = perform_viterbi_query(info.context)
-        # Handle connections
-        if issubclass(info.return_type.graphene_type, relay.Connection):
-            return [
-                recursively_map_dict_keys(
-                    to_snake_case,
-                    request_datum['node']
-                ) for request_datum in request_data[info.path[-1]]['edges']
-            ]
-        # Handle nodes
-        elif relay.is_node(info.return_type.graphene_type):
-            return recursively_map_dict_keys(
-                to_snake_case,
-                request_data[info.path[-1]]
-            )
-
-    return func
+def viterbi_resolver(parent, info, *args, **kwargs):
+    return parent.get(to_snake_case(info.path[-1]), None)  # path[-1] is the name of the field that we are resolving
 
 
-# Used to give values to fields in a DjangoObjectType, if the fields were not present in the Django model
-# Specifically used here to get values from the parameter models
-def populate_fields(object_to_modify, field_list, resolver_func):
-    for name in field_list:
-        setattr(object_to_modify, 'resolve_{}'.format(name), staticmethod(resolver_func(name)))
+def viterbi_connection_resolver(parent, info, *args, **kwargs):
+    connection = parent.get(to_snake_case(info.path[-1]), None)
+    return [datum['node'] for datum in connection['edges']] if connection else []
 
 
 class ViterbiJobNode(graphene.ObjectType):
@@ -81,32 +60,58 @@ class ViterbiPublicJobConnection(relay.Connection):
         node = ViterbiPublicJobNode
 
 
-class TestText(graphene.ObjectType):
-    text = graphene.String()
+class ViterbiJobCandidate(graphene.ObjectType):
+    orbit_period = graphene.String()
+    asini = graphene.String()
+    orbit_tp = graphene.String()
+    candidate_frequency = graphene.String()
+    source_dataset = graphene.String()
 
 
-class Query(object):
-    viterbi_job = graphene.Field(ViterbiJobNode, id=graphene.ID(required=True))
+class Viterbi(graphene.ObjectType):
+    viterbi_job = graphene.Field(
+        ViterbiJobNode,
+        id=graphene.ID(required=True),
+        resolver=viterbi_resolver
+    )
+
     viterbi_jobs = relay.ConnectionField(
         ViterbiJobConnection,
-        order_by=graphene.String()
+        order_by=graphene.String(),
+        resolver=viterbi_connection_resolver
     )
+
     public_viterbi_jobs = relay.ConnectionField(
         ViterbiPublicJobConnection,
         search=graphene.String(),
-        time_range=graphene.String()
+        time_range=graphene.String(),
+        resolver=viterbi_connection_resolver
     )
 
 
-populate_fields(
-    Query,
-    [
-        'viterbi_job',
-        'viterbi_jobs',
-        'public_viterbi_jobs'
-    ],
-    viterbi_resolvers
-)
+class Query(graphene.ObjectType):
+    viterbi = graphene.Field(Viterbi)
+
+    def resolve_viterbi(parent, info):
+        query = generate_viterbi_query(info)
+        data = recursively_map_dict_keys(
+            to_snake_case,
+            perform_viterbi_query(
+                query,
+                info.variable_values,
+                info.context.headers,
+                info.context.method
+            )
+        )
+        return data
+
+    viterbi_job_candidates = graphene.List(
+        ViterbiJobCandidate,
+        job_id=graphene.ID(required=True)
+    )
+
+    def resolve_viterbi_job_candidates(parent, info, job_id):
+        return get_viterbi_candidates(info, job_id)
 
 
 class CWFollowupJobMutation(relay.ClientIDMutation):
@@ -114,15 +119,14 @@ class CWFollowupJobMutation(relay.ClientIDMutation):
         name = graphene.String()
         description = graphene.String()
         is_uploaded = graphene.Boolean()
-        uploaded_job = UploadedDataInputType(required=False)
-        viterbi_job = ViterbiJobInputType(required=False)
+        viterbi_id = graphene.ID(required=False)
+        candidates = graphene.List(ViterbiJobCandidate)
         followups = graphene.List(graphene.String)
 
     result = graphene.String()
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **kwargs):
-        print(kwargs)
         followup_job = create_followup_job(info.context.user, **kwargs)
         return CWFollowupJobMutation(
             result=followup_job.id

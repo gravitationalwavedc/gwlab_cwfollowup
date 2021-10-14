@@ -86,7 +86,7 @@ const PublicViterbiJobsList = ({data, match, router, relay}) => {
             <Row>
                 <Col>
                     <JobTable
-                        data={data.publicViterbiJobs}
+                        data={data.viterbi.publicViterbiJobs}
                         setOrder={setOrder} 
                         order={order} 
                         setDirection={setDirection} 
@@ -106,20 +106,22 @@ export default createPaginationContainer(PublicViterbiJobsList,
     {
         data: graphql`
             fragment PublicViterbiJobsList_data on Query {
-                publicViterbiJobs (
-                    first: $count,
-                    after: $cursor,
-                    search: $search,
-                    timeRange: $timeRange
-                ) @connection(key: "PublicViterbiJobsList_publicViterbiJobs") {
-                    pageInfo {
-                        hasNextPage
-                        endCursor
-                    }
-                    edges {
-                        node {
-                            id
-                            name
+                viterbi {
+                    publicViterbiJobs (
+                        first: $count,
+                        after: $cursor,
+                        search: $search,
+                        timeRange: $timeRange
+                    ) @connection(key: "PublicViterbiJobsList_publicViterbiJobs") {
+                        pageInfo {
+                            hasNextPage
+                            endCursor
+                        }
+                        edges {
+                            node {
+                                id
+                                name
+                            }
                         }
                     }
                 }
@@ -135,12 +137,12 @@ export default createPaginationContainer(PublicViterbiJobsList,
                 $search: String,
                 $timeRange: String
             ) {
-              ...PublicViterbiJobsList_data
+                ...PublicViterbiJobsList_data
             }
         `,
 
         getConnectionFromProps(props) {
-            return props.data && props.data.publicViterbiJobs;
+            return props.data && props.data.viterbi.publicViterbiJobs;
         },
 
         getFragmentVariables(previousVariables, totalCount) {

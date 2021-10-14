@@ -85,7 +85,7 @@ const UserViterbiJobsList = ({data, match, router, relay}) => {
             <Row>
                 <Col>
                     <JobTable
-                        data={data.viterbiJobs} 
+                        data={data.viterbi.viterbiJobs} 
                         setOrder={setOrder} 
                         order={order} 
                         setDirection={setDirection} 
@@ -106,26 +106,29 @@ export default createPaginationContainer(UserViterbiJobsList,
     {
         data: graphql`
             fragment UserViterbiJobsList_data on Query {
-                viterbiJobs(
-                    first: $count,
-                    after: $cursor,
-                    orderBy: $orderBy
-                ) @connection(key: "UserViterbiJobsList_viterbiJobs") {
-                    edges {
-                        node {
-                            id
-                            name
-                            description
-                            lastUpdated
-                            jobStatus {
+                viterbi{
+
+                    viterbiJobs(
+                        first: $count,
+                        after: $cursor,
+                        orderBy: $orderBy
+                    ) @connection(key: "UserViterbiJobsList_viterbiJobs") {
+                        edges {
+                            node {
+                                id
                                 name
-                            }
-                            labels {
-                                name
+                                description
+                                lastUpdated
+                                jobStatus {
+                                    name
+                                }
+                                labels {
+                                    name
+                                }
                             }
                         }
                     }
-                  }
+                }
             }
         `,
     },
@@ -137,11 +140,11 @@ export default createPaginationContainer(UserViterbiJobsList,
                 $cursor: String,
                 $orderBy: String
             ) {
-              ...UserViterbiJobsList_data
+                ...UserViterbiJobsList_data
             }
         `,
         getConnectionFromProps(props) {
-            return props.data && props.data.viterbiJobs;
+            return props.data && props.data.viterbi.viterbiJobs;
         },
 
         getFragmentVariables(previousVariables, totalCount) {

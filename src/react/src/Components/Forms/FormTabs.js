@@ -12,17 +12,20 @@ import _ from "lodash";
 import { harnessApi } from '../../index';
 
 const submitMutation = graphql`
-  mutation FormTabsNewJobMutation($input: CWFollowupJobMutationInput!) {
-    newCwfollowupJob(input: $input) {
-      result
+    mutation FormTabsNewJobMutation($input: CWFollowupJobMutationInput!) {
+        newCwfollowupJob(input: $input) {
+            result
+        }
     }
-  }
 `;
 
 
 const FormTabs = ({ data }) => {
-    const jobData = data && data.viterbiJob
-    const [key, setKey] = useState(jobData ? "followups" : "uploadCandidate")
+    const jobData = data && data.viterbi.viterbiJob
+    const candidateData = data && data.viterbiJobCandidates
+
+    const [key, setKey] = useState("candidates")
+
 
     const handleJobSubmission = (values, jobData) => {
         // The mutation requires all number values to be strings.
@@ -93,15 +96,12 @@ const FormTabs = ({ data }) => {
                     <Row>
                         <Col md={2}>
                             <Nav className="flex-column">
-                                {
-                                    !jobData && 
-                                    <Nav.Item>
-                                        <Nav.Link eventKey="uploadCandidate">
-                                            <h5>Candidate</h5>
-                                            <p>Specify details of candidate</p>
-                                        </Nav.Link>
-                                    </Nav.Item>
-                                }
+                                <Nav.Item>
+                                    <Nav.Link eventKey="candidates">
+                                        <h5>Candidate</h5>
+                                        <p>Specify details of candidate</p>
+                                    </Nav.Link>
+                                </Nav.Item>
                                 <Nav.Item>
                                     <Nav.Link eventKey="followups">
                                         <h5>Target Details</h5>
@@ -118,12 +118,9 @@ const FormTabs = ({ data }) => {
                         </Col>
                         <Col md={8}>
                             <Tab.Content>
-                                {
-                                    !jobData &&
-                                    <Tab.Pane eventKey="uploadCandidate">
-                                        <CandidateForm handlePageChange={setKey}/>
-                                    </Tab.Pane>
-                                }
+                                <Tab.Pane eventKey="candidates">
+                                    <CandidateForm handlePageChange={setKey}/>
+                                </Tab.Pane>
                                 <Tab.Pane eventKey="followups">
                                     <FollowupsForm handlePageChange={setKey}/>
                                 </Tab.Pane>
@@ -145,15 +142,24 @@ export default createFragmentContainer(FormTabs,
             fragment FormTabs_data on Query @argumentDefinitions(
                 jobId: {type: "ID!"}
             ) {
-                viterbiJob (id: $jobId) {
-                    id
-                    start {
-                        name
-                        description
+                viterbi {
+                    viterbiJob (id: $jobId) {
+                        id
+                        start {
+                            name
+                            description
+                        }
+                        data {
+                            minStartTime
+                        }
                     }
-                    data {
-                        minStartTime
-                    }
+                }
+                viterbiJobCandidates (jobId: $jobId) {
+                    orbitPeriod
+                    asini
+                    orbitTp
+                    candidateFrequency
+                    sourceDataset
                 }
             }
         `
