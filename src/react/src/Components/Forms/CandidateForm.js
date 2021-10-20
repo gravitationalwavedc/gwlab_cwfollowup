@@ -28,21 +28,8 @@ const CandidateForm = ({handlePageChange}) => {
                     name="candidates"
                     render={({ push, remove }) => (
                         <tbody>
-                            {/* {
-                                values.candidates.slice(0, -1).map((candidate, index) => (
-                                    <tr key={index}>
-                                        <td>{candidate.candidateFrequency}</td>
-                                        <td>{candidate.sourceDataset}</td>
-                                        <td>{candidate.targetBinary ? 'Yes' : 'No'}</td>
-                                        <td>{candidate.targetBinary ? candidate.orbitPeriod : '-'}</td>
-                                        <td>{candidate.targetBinary ? candidate.asini : '-'}</td>
-                                        <td>{candidate.targetBinary ? candidate.orbitTp : '-'}</td>
-                                        <td><Button onClick={() => remove(index)}>Remove</Button></td>
-                                    </tr>
-                                ))
-                            } */}
                             {
-                                values.candidates.slice(0, -1).map((candidate, index) => (
+                                values.candidates.map((candidate, index) => (
                                     <tr key={index}>
                                         <td>
                                             <Input

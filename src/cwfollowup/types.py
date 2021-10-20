@@ -1,4 +1,6 @@
-from graphene import InputObjectType, ObjectType, Int, Float, String, Boolean, ID
+from graphene import InputObjectType, ObjectType, Int, Float, String, Boolean
+from graphene_django.types import DjangoObjectType
+from .models import CWJobCandidate
 
 
 class ViterbiStartType(ObjectType):
@@ -34,13 +36,26 @@ class ViterbiJobStatusType(ObjectType):
     date = String()
 
 
-class ViterbiJobInputType(InputObjectType):
-    viterbi_id = ID()
+class OutputStartType(ObjectType):
+    name = String()
+    description = String()
+    private = Boolean()
 
 
-class UploadedDataInputType(InputObjectType):
+class JobStatusType(ObjectType):
+    name = String()
+    number = Int()
+    date = String()
+
+
+class CandidateInputType(InputObjectType):
     source_dataset = String()
     candidate_frequency = Float()
     orbit_period = Float()
     orbit_tp = Float()
     asini = Float()
+
+
+class CandidateType(DjangoObjectType):
+    class Meta:
+        model = CWJobCandidate

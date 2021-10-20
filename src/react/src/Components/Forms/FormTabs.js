@@ -14,64 +14,60 @@ import { harnessApi } from '../../index';
 const submitMutation = graphql`
     mutation FormTabsNewJobMutation($input: CWFollowupJobMutationInput!) {
         newCwfollowupJob(input: $input) {
-            result
+            result {
+                jobId
+            }
         }
     }
 `;
 
 
-const FormTabs = ({ data }) => {
+const FormTabs = ({ data, match }) => {
+    const viterbiId = match.location.state && match.location.state.jobId
     const jobData = data && data.viterbi.viterbiJob
     const candidateData = data && data.viterbiJobCandidates
+
+    if (jobData) {
+        initialValues.name = `Followup-of-${jobData.start.name}`
+        initialValues.description = `Followup job of ${jobData.start.name}. Original description: ${jobData.start.description}`
+    }
+    if (candidateData) {
+        initialValues.candidates = candidateData.map(candidate => ({
+            ...candidate,
+            targetBinary: true
+        }))
+    }
 
     const [key, setKey] = useState("candidates")
 
 
-    const handleJobSubmission = (values, jobData) => {
+    const handleJobSubmission = (values, viterbiId) => {
         // The mutation requires all number values to be strings.
-        Object.entries(values)
-            .filter(([key, value]) => typeof(value) === 'number')
-            .map(([key, value]) => values[key] = value.toString());
+        const json = JSON.stringify(values);
+        values = JSON.parse(json, (key, val) => (
+            typeof(val) === 'number' && val !== null ? val.toString() : val
+        ));
         var variables = {
             input: {
                 name: values.name,
                 description: values.description,
-                followups: values.followupChoices
-                // private: false, 
+                isUploaded: viterbiId ? false : true,
+                viterbiId: viterbiId,
+                candidates: values.candidates.map(({targetBinary, ...candidate}) => 
+                    candidate
+                ),
+                followups: values.followupChoices,
             }
         };
-        _.merge(
-            variables,
-            jobData ? {
-                input: {
-                    isUploaded: false,
-                    viterbiJob: {
-                        viterbiId: jobData.id
-                    }
-                }
-            } :
-            {
-                input: {
-                    isUploaded: true,
-                    uploadedJob: {
-                        sourceDataset: values.sourceDataset,
-                        candidateFrequency: values.candidateFrequency,
-                        asini: values.asini,
-                        orbitTp: values.orbitTp,
-                        orbitPeriod: values.orbitPeriod,
-                    }
-                }
-            }
-        )
 
         commitMutation(harnessApi.getEnvironment('cwfollowup'), {
             mutation: submitMutation,
             variables: variables,
             onCompleted: (response, errors) => {
                 console.log(response)
-                // if (!errors) {
-                //     router.replace(`/viterbi/job-results/${response.newViterbiJob.result.jobId}/`);
-                // }
+                if (!errors) {
+                    router.replace(`/cwfollowup/job-results/${response.newCwFollowupJob.result.jobId}/`);
+                }
             },
         });
     };
@@ -82,7 +78,7 @@ const FormTabs = ({ data }) => {
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={(values) => handleJobSubmission(values, jobData)}
+            onSubmit={(values) => handleJobSubmission(values, viterbiId)}
         >
             <Form>
 
@@ -148,9 +144,6 @@ export default createFragmentContainer(FormTabs,
                         start {
                             name
                             description
-                        }
-                        data {
-                            minStartTime
                         }
                     }
                 }

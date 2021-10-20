@@ -94,7 +94,7 @@ const UserViterbiJobsList = ({data, match, router, relay}) => {
                         router={router}
                         hasMore={relay.hasMore()}
                         loadMore={loadMore}
-                        myJobs={true}
+                        myJobs
                     />
                 </Col>
             </Row>

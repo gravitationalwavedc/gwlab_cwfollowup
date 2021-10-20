@@ -7,6 +7,7 @@ import FormTabs from './Components/Forms/FormTabs';
 import Loading from './Components/Loading';
 import {RedirectException} from 'found';
 import HomePage from './Pages/HomePage';
+import ViewJob from './Pages/ViewJob'
 
 const handleRender = ({Component, props}) => {
     if (!Component || !props)
@@ -89,7 +90,7 @@ function getRoutes() {
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 Component={MyJobs}
                 render={handleRender}/> */}
-            {/* <Route
+            <Route
                 path="job-results/:jobId/"
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 Component={ViewJob}
@@ -102,7 +103,7 @@ function getRoutes() {
                     jobId: params.jobId
                 })}
                 render={handleRender}
-            /> */}
+            />
         </Route>
     );
 }
