@@ -3,10 +3,11 @@ import {createPaginationContainer, graphql} from 'react-relay';
 import { Button, Container, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import { HiOutlineSearch, HiOutlinePlus } from 'react-icons/hi';
 import JobTable from '../Components/JobTable';
+import EmptyTableMessage from './EmptyTableMessage';
 
 const RECORDS_PER_PAGE = 100;
 
-const UserViterbiJobsList = ({data, match, router, relay}) => {
+const UserViterbiJobsList = ({data, match, router, relay, handleSwitch}) => {
     console.log(data)
     const [search, setSearch] = useState('');
     const [timeRange, setTimeRange] = useState('1d');
@@ -41,7 +42,10 @@ const UserViterbiJobsList = ({data, match, router, relay}) => {
     ];
 
     return (
-        <Container >
+        <Container>
+            <h4 className="pt-5 pt-md-5 mb-0">
+                My Viterbi Jobs
+            </h4>
             <Form>
                 <Form.Row>
                     <Col lg={3}>
@@ -80,11 +84,20 @@ const UserViterbiJobsList = ({data, match, router, relay}) => {
                             </Form.Control>
                         </Form.Group>
                     </Col>
+                    <Col lg={4} xs={10}>
+                        <Button 
+                            onClick={handleSwitch}
+                            variant="outline-primary"
+                            className="mr-1"
+                        >
+                            Show Public Viterbi Jobs
+                        </Button>
+                    </Col>
                 </Form.Row>
             </Form>
             <Row>
                 <Col>
-                    <JobTable
+                    { data.viterbi.viterbiJobs.edges.length > 0 ? <JobTable
                         data={data.viterbi.viterbiJobs} 
                         setOrder={setOrder} 
                         order={order} 
@@ -95,7 +108,7 @@ const UserViterbiJobsList = ({data, match, router, relay}) => {
                         hasMore={relay.hasMore()}
                         loadMore={loadMore}
                         myJobs
-                    />
+                    /> : <EmptyTableMessage/>}
                 </Col>
             </Row>
         </Container>

@@ -100,8 +100,8 @@ const FormTabs = ({ data, match }) => {
                                 </Nav.Item>
                                 <Nav.Item>
                                     <Nav.Link eventKey="followups">
-                                        <h5>Target Details</h5>
-                                        <p>Specify details of target</p>
+                                        <h5>Followups</h5>
+                                        <p>Specify which followups should be run</p>
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>

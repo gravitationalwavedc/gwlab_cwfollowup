@@ -8,24 +8,11 @@ import UserViterbiJobsList from '../Components/UserViterbiJobsList';
 const ViterbiJobLists = (props) => {
     const [publicJobs, setPublicJobs] = useState(true)
 
-
     return (
         <Container>
-            <h2 className="pt-5 mb-4">
-            {publicJobs ? "Public Viterbi Jobs" : "My Viterbi Jobs"}
-                <span className="float-right">
-                    <Button 
-                        onClick={() => setPublicJobs(!publicJobs)}
-                        variant="outline-primary"
-                        className="mr-1"
-                    >
-                        {publicJobs ? "Switch to My Jobs" : "Switch to Public Jobs"}
-                    </Button>
-                </span>
-            </h2>
             {
-                publicJobs ? <PublicViterbiJobsList {...props} />
-                :  <UserViterbiJobsList {...props} />
+                publicJobs ? <PublicViterbiJobsList {...props} handleSwitch={() => setPublicJobs(false)}/>
+                :  <UserViterbiJobsList {...props} handleSwitch={() => setPublicJobs(true)}/>
             }
         </Container>
     )

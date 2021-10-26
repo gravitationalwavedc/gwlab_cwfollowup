@@ -3,10 +3,11 @@ import {createPaginationContainer, graphql} from 'react-relay';
 import { Button, Container, Col, Form, InputGroup, Row } from 'react-bootstrap';
 import { HiOutlineSearch, HiOutlinePlus } from 'react-icons/hi';
 import JobTable from '../Components/JobTable';
+import EmptyTableMessage from './EmptyTableMessage';
 
 const RECORDS_PER_PAGE = 100;
 
-const PublicViterbiJobsList = ({data, match, router, relay}) => {
+const PublicViterbiJobsList = ({data, match, router, relay, handleSwitch}) => {
     const [search, setSearch] = useState('');
     const [timeRange, setTimeRange] = useState('1d');
     const [order, setOrder] = useState();
@@ -41,6 +42,9 @@ const PublicViterbiJobsList = ({data, match, router, relay}) => {
 
     return (
         <Container>
+            <h4 className="pt-5 pt-md-5 mb-0">
+                Public Viterbi Jobs
+            </h4>
             <Form>
                 <Form.Row>
                     <Col lg={3}>
@@ -81,11 +85,20 @@ const PublicViterbiJobsList = ({data, match, router, relay}) => {
                             </Form.Control>
                         </Form.Group>
                     </Col>
+                    <Col lg={4} xs={10}>
+                        <Button 
+                            onClick={handleSwitch}
+                            variant="outline-primary"
+                            className="mr-1"
+                        >
+                            Show My Viterbi Jobs
+                        </Button>
+                    </Col>
                 </Form.Row>
             </Form>
             <Row>
                 <Col>
-                    <JobTable
+                    {data.viterbi.publicViterbiJobs.edges.length > 0 ? <JobTable
                         data={data.viterbi.publicViterbiJobs}
                         setOrder={setOrder} 
                         order={order} 
@@ -95,7 +108,7 @@ const PublicViterbiJobsList = ({data, match, router, relay}) => {
                         router={router}
                         hasMore={relay.hasMore()}
                         loadMore={loadMore}
-                    />
+                    /> : <EmptyTableMessage/>}
                 </Col>
             </Row>
         </Container>

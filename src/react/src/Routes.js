@@ -6,8 +6,9 @@ import NewJob from './Pages/NewJob';
 import FormTabs from './Components/Forms/FormTabs';
 import Loading from './Components/Loading';
 import {RedirectException} from 'found';
-import HomePage from './Pages/HomePage';
-import ViewJob from './Pages/ViewJob'
+import MyJobs from './Pages/MyJobs';
+import PublicJobs from './Pages/PublicJobs';
+import ViewJob from './Pages/ViewJob';
 
 const handleRender = ({Component, props}) => {
     if (!Component || !props)
@@ -23,7 +24,22 @@ function getRoutes() {
     return (
         <Route>
             <Route
-                Component={HomePage}
+                Component={PublicJobs}
+                query={graphql`
+                query Routes_HomePage_Query (
+                  $count: Int!,
+                  $cursor: String,
+                  $search: String,
+                  $timeRange: String,
+                ) {
+                    ...PublicJobs_data
+                }
+              `}
+                prepareVariables={() => ({
+                    timeRange: 'all',
+                    count: 100
+                })}
+                environment={harnessApi.getEnvironment('cwfollowup')}
                 render={handleRender}/>
             <Route
                 path="new-job"
@@ -72,7 +88,7 @@ function getRoutes() {
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 Component={DuplicateJobForm}
                 render={handleRender}/> */}
-            {/* <Route
+            <Route
                 path="job-list"
                 query={graphql`
                     query Routes_JobList_Query(
@@ -89,7 +105,7 @@ function getRoutes() {
                 })}
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 Component={MyJobs}
-                render={handleRender}/> */}
+                render={handleRender}/>
             <Route
                 path="job-results/:jobId/"
                 environment={harnessApi.getEnvironment('cwfollowup')}
