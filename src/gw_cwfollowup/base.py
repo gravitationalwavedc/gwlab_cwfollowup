@@ -167,3 +167,6 @@ GWCLOUD_AUTH_API_URL = "http://localhost:8000/graphql"
 
 # Viterbi URL
 GWLAB_VITERBI_GRAPHQL_URL = "http://localhost:8002/graphql"
+
+# The expiry of FileDownloadTokens (in seconds)
+FILE_DOWNLOAD_TOKEN_EXPIRY = 60*60*24

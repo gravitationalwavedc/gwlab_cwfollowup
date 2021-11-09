@@ -1,18 +1,22 @@
+from decimal import Decimal
 import graphene
 from graphene import relay
 from graphene_django.types import DjangoObjectType
 from django_filters import FilterSet, OrderingFilter
 from graphene_django.filter import DjangoFilterConnectionField
+from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
-from graphql_relay.node.node import to_global_id
+from graphql_relay.node.node import from_global_id, to_global_id
 
 from .types import CandidateInputType, OutputStartType, JobStatusType, CandidateType
+from .views import create_followup_job
+from .status import JobStatus
+from .models import CWFollowupJob, FileDownloadToken
+
 from .utils.jobs.request_job_filter import request_job_filter
 from .utils.db_search.db_search import perform_db_search
 from .utils.derive_job_status import derive_job_status
-from .views import create_followup_job
-from .status import JobStatus
-from .models import CWFollowupJob
+from .utils.jobs.request_file_download_id import request_file_download_ids
 
 
 class UserCWFollowupJobFilter(FilterSet):
@@ -74,10 +78,10 @@ class CWFollowupJobNode(DjangoObjectType):
     followups = graphene.List(graphene.String)
 
     def resolve_candidates(parent, info):
-        return parent.cw_job.candidate.all()
+        return parent.cw_job.candidates.all()
 
     def resolve_followups(parent, info):
-        return parent.followup.values_list('followup', flat=True)
+        return parent.followups.values_list('followup', flat=True)
 
     @classmethod
     def get_queryset(parent, queryset, info):
@@ -116,6 +120,23 @@ class CWFollowupJobNode(DjangoObjectType):
             }
 
 
+class CWFollowupResultFile(graphene.ObjectType):
+    path = graphene.String()
+    is_dir = graphene.Boolean()
+    file_size = graphene.Int()
+    download_token = graphene.String()
+
+
+class CWFollowupResultFiles(graphene.ObjectType):
+    class Meta:
+        interfaces = (relay.Node,)
+
+    class Input:
+        job_id = graphene.ID()
+
+    files = graphene.List(CWFollowupResultFile)
+
+
 class CWFollowupPublicJobNode(graphene.ObjectType):
     user = graphene.String()
     name = graphene.String()
@@ -138,6 +159,8 @@ class Query(graphene.ObjectType):
         search=graphene.String(),
         time_range=graphene.String()
     )
+
+    cwfollowup_result_files = graphene.Field(CWFollowupResultFiles, job_id=graphene.ID(required=True))
 
     @login_required
     def resolve_public_cwfollowup_jobs(self, info, **kwargs):
@@ -169,6 +192,41 @@ class Query(graphene.ObjectType):
         # hasNextPage correctly, such that infinite scroll works as expected.
         return result
 
+    @login_required
+    def resolve_cwfollowup_result_files(self, info, **kwargs):
+        # Get the model id of the cwfollowup job
+        _, job_id = from_global_id(kwargs.get("job_id"))
+
+        # Try to look up the job with the id provided
+        job = CWFollowupJob.get_by_id(job_id, info.context.user)
+
+        # Fetch the file list from the job controller
+        success, files = job.get_file_list()
+        if not success:
+            raise Exception("Error getting file list. " + str(files))
+
+        # Generate download tokens for the list of files
+        paths = [f['path'] for f in filter(lambda x: not x['isDir'], files)]
+        tokens = FileDownloadToken.create(job, paths)
+
+        # Generate a dict that can be used to query the generated tokens
+        token_dict = {tk.path: tk.token for tk in tokens}
+
+        # Build the resulting file list and send it back to the client
+        result = [
+            CWFollowupResultFile(
+                path=f["path"],
+                is_dir=f["isDir"],
+                file_size=Decimal(f["fileSize"]),
+                download_token=token_dict[f["path"]] if f["path"] in token_dict else None
+            )
+            for f in files
+        ]
+
+        return CWFollowupResultFiles(
+            files=result
+        )
+
 
 class CWFollowupJobCreationResult(graphene.ObjectType):
     job_id = graphene.String()
@@ -196,5 +254,45 @@ class CWFollowupJobMutation(relay.ClientIDMutation):
         )
 
 
+class GenerateFileDownloadIds(relay.ClientIDMutation):
+    class Input:
+        job_id = graphene.ID(required=True)
+        download_tokens = graphene.List(graphene.String, required=True)
+
+    result = graphene.List(graphene.String)
+
+    @classmethod
+    @login_required
+    def mutate_and_get_payload(cls, root, info, job_id, download_tokens):
+        user = info.context.user
+
+        # Get the job these file downloads are for
+        job = CWFollowupJob.get_by_id(from_global_id(job_id)[1], user)
+
+        # Verify the download tokens and get the paths
+        paths = FileDownloadToken.get_paths(job, download_tokens)
+
+        # Check that all tokens were found
+        if None in paths:
+            raise GraphQLError("At least one token was invalid or expired.")
+
+        # Request the list of file download ids from the list of paths
+        # Only the original job author may generate a file download id
+        success, result = request_file_download_ids(
+            job,
+            paths
+        )
+
+        # Report the error if there is one
+        if not success:
+            raise GraphQLError(result)
+
+        # Return the list of file download ids
+        return GenerateFileDownloadIds(
+            result=result
+        )
+
+
 class Mutation(graphene.ObjectType):
     new_cwfollowup_job = CWFollowupJobMutation.Field()
+    generate_file_download_ids = GenerateFileDownloadIds.Field()

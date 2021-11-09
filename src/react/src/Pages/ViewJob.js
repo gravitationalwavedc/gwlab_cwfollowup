@@ -16,7 +16,7 @@ const ViewJob = (props) => {
         setShowNotification(true);
     };
 
-    const { start, lastUpdated, userId, candidates, followups } = props.data.cwfollowupJob;
+    const { id, start, lastUpdated, userId, candidates, followups } = props.data.cwfollowupJob;
 
     const updated = moment.utc(lastUpdated, 'YYYY-MM-DD HH:mm:ss UTC').local().format('llll');
 
@@ -78,13 +78,13 @@ const ViewJob = (props) => {
                             </Tab.Pane>
                             <Tab.Pane eventKey="results">
                                 <div>Placeholder</div>
-                                {/* <Files {...props}/> */}
+                                <Files jobId={id} {...props}/>
                             </Tab.Pane>
                         </Tab.Content>
                     </Col>
                 </Row>
             </Tab.Container>
-            {/* <Files {...props} hidden style={{display:'none'}}/> */}
+            <Files jobId={id} {...props} hidden style={{display:'none'}}/>
         </Container>
     );
 };

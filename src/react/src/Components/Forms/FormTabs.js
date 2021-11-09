@@ -22,7 +22,7 @@ const submitMutation = graphql`
 `;
 
 
-const FormTabs = ({ data, match }) => {
+const FormTabs = ({ data, match, router }) => {
     const viterbiId = match.location.state && match.location.state.jobId
     const jobData = data && data.viterbi.viterbiJob
     const candidateData = data && data.viterbiJobCandidates
@@ -66,7 +66,7 @@ const FormTabs = ({ data, match }) => {
             onCompleted: (response, errors) => {
                 console.log(response)
                 if (!errors) {
-                    router.replace(`/cwfollowup/job-results/${response.newCwFollowupJob.result.jobId}/`);
+                    router.replace(`/cwfollowup/job-results/${response.newCwfollowupJob.result.jobId}/`);
                 }
             },
         });
