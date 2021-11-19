@@ -6,7 +6,6 @@ import NewJobBanner from '../Components/NewJobBanner';
 
 
 const NewJob = ({ match, router, ...props}) => {
-    
     return (
         <React.Fragment>
             <NewJobBanner match={match} router={router} />

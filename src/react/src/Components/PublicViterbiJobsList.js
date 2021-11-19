@@ -90,6 +90,7 @@ const PublicViterbiJobsList = ({data, match, router, relay, handleSwitch}) => {
                             onClick={handleSwitch}
                             variant="outline-primary"
                             className="mr-1"
+                            data-testid="user-jobs-button"
                         >
                             Show My Viterbi Jobs
                         </Button>
@@ -100,7 +101,7 @@ const PublicViterbiJobsList = ({data, match, router, relay, handleSwitch}) => {
                 <Col>
                     {data.viterbi.publicViterbiJobs.edges.length > 0 ? <JobTable
                         data={data.viterbi.publicViterbiJobs}
-                        setOrder={setOrder} 
+                        setOrder={setOrder}
                         order={order} 
                         setDirection={setDirection} 
                         direction={direction}
@@ -108,6 +109,7 @@ const PublicViterbiJobsList = ({data, match, router, relay, handleSwitch}) => {
                         router={router}
                         hasMore={relay.hasMore()}
                         loadMore={loadMore}
+                        toFollowup
                     /> : <EmptyTableMessage/>}
                 </Col>
             </Row>
@@ -134,6 +136,13 @@ export default createPaginationContainer(PublicViterbiJobsList,
                             node {
                                 id
                                 name
+                                description
+                                jobStatus {
+                                    name
+                                }
+                                labels {
+                                    name
+                                }
                             }
                         }
                     }

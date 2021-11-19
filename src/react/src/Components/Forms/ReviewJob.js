@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {Button, Col, Row, Table,} from 'react-bootstrap';
-import FormCard from './FormCard';
+import { Col, Row } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 import _ from 'lodash';
 import Parameters from '../Results/Parameters';
+import PageNav from './Atoms/PageNav';
 
-const ReviewJob = () => {
+const ReviewJob = ({ handlePageChange }) => {
     const [errors, setErrors] = useState([]);
     const { values, handleSubmit, validateForm } = useFormikContext()
 
@@ -21,14 +21,16 @@ const ReviewJob = () => {
     return (
         <React.Fragment>
             <Parameters candidates={values.candidates} followups={values.followupChoices} />
-            <Row className="mb-5">
-                <Col md={3}>
-                    <Button onClick={submitReview}>Submit your job</Button>
-                </Col>
+            {errors && <Row>
                 <Col>
                     <ul>{errors.map(value => <li className="text-danger" key={value}>{value}</li>)}</ul>
                 </Col>
-            </Row>
+            </Row>}
+            <PageNav
+                handlePageChange={handlePageChange}
+                backward={{key: 'followups', label: 'Followups'}}
+                forward={{key: 'submit', label: 'Submit'}}
+                handleSubmit={submitReview}/>
         </React.Fragment>
     )
 };

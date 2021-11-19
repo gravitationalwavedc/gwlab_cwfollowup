@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, Col, Row, Table,} from 'react-bootstrap';
 import FormCard from '../Forms/FormCard';
+import _ from 'lodash';
 
 const Parameters = ({ candidates, followups }) => {
 

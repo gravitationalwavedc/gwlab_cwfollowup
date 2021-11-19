@@ -8,7 +8,6 @@ import EmptyTableMessage from './EmptyTableMessage';
 const RECORDS_PER_PAGE = 100;
 
 const UserViterbiJobsList = ({data, match, router, relay, handleSwitch}) => {
-    console.log(data)
     const [search, setSearch] = useState('');
     const [timeRange, setTimeRange] = useState('1d');
     const [order, setOrder] = useState();
@@ -107,6 +106,7 @@ const UserViterbiJobsList = ({data, match, router, relay, handleSwitch}) => {
                         router={router}
                         hasMore={relay.hasMore()}
                         loadMore={loadMore}
+                        toFollowup
                         myJobs
                     /> : <EmptyTableMessage/>}
                 </Col>

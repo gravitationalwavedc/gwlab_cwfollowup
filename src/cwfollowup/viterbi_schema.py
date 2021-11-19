@@ -61,10 +61,10 @@ class ViterbiPublicJobConnection(relay.Connection):
 
 
 class ViterbiJobCandidate(graphene.ObjectType):
-    orbit_period = graphene.String()
-    asini = graphene.String()
-    orbit_tp = graphene.String()
-    candidate_frequency = graphene.String()
+    orbit_period = graphene.Float()
+    asini = graphene.Float()
+    orbit_tp = graphene.Float()
+    candidate_frequency = graphene.Float()
     source_dataset = graphene.String()
 
 

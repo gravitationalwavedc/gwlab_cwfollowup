@@ -81,10 +81,10 @@ def get_viterbi_candidates(info, job_id):
     for candidate_data in candidate_file_data.text.strip().split('\n'):
         candidate = candidate_data.split()
         candidates.append({
-            'orbit_period': candidate[0],
-            'asini': candidate[1],
-            'orbit_tp': candidate[2],
-            'candidate_frequency': candidate[5],
+            'orbit_period': float(candidate[0]),
+            'asini': float(candidate[1]),
+            'orbit_tp': float(candidate[2]),
+            'candidate_frequency': float(candidate[5]),
             'source_dataset': source_dataset
         })
 
@@ -168,3 +168,15 @@ def create_followup_job(user, name, description, is_uploaded, followups, candida
         followup_job.save()
 
         return followup_job
+
+
+def update_cwfollowup_job(job_id, user, private):
+    cwfollowup_job = CWFollowupJob.get_by_id(job_id, user)
+
+    if user.user_id == cwfollowup_job.user_id:
+        cwfollowup_job.private = private
+        cwfollowup_job.save()
+
+        return 'Job saved!'
+    else:
+        raise Exception('You must own the job to change the privacy!')

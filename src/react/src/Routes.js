@@ -3,7 +3,7 @@ import {Route} from 'found';
 import {graphql} from 'react-relay';
 import {harnessApi} from './index';
 import NewJob from './Pages/NewJob';
-import FormTabs from './Components/Forms/FormTabs';
+import JobForm from './Pages/JobForm';
 import Loading from './Components/Loading';
 import {RedirectException} from 'found';
 import MyJobs from './Pages/MyJobs';
@@ -63,10 +63,10 @@ function getRoutes() {
                 render={handleRender}/>
             <Route
                 path="new-job/job-form/"
-                Component={FormTabs}
+                Component={JobForm}
                 query={graphql`
-                    query Routes_FormTabs_Query ($jobId: ID!){
-                        ...FormTabs_data @arguments(jobId: $jobId)
+                    query Routes_JobForm_Query ($jobId: ID!){
+                        ...JobForm_data @arguments(jobId: $jobId)
                     }
                 `}
                 prepareVariables={(params, {location}) => ({

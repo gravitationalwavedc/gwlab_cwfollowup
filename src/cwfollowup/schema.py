@@ -123,7 +123,7 @@ class CWFollowupJobNode(DjangoObjectType):
 class CWFollowupResultFile(graphene.ObjectType):
     path = graphene.String()
     is_dir = graphene.Boolean()
-    file_size = graphene.Int()
+    file_size = graphene.Decimal()
     download_token = graphene.String()
 
 

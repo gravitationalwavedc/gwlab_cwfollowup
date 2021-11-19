@@ -1,13 +1,12 @@
 import React from 'react';
 import {Button, Col, Row, Table} from 'react-bootstrap';
-import FormCard from './FormCard';
 import Input from './Atoms/Input';
-import RadioGroup from './Atoms/RadioGroup';
 import Switch from './Atoms/Switch';
 import Select from './Atoms/Select';
 import { FieldArray, useFormikContext, getIn } from 'formik';
 import initialValues from './initialValues';
 import { HiOutlineX, HiOutlinePlus } from 'react-icons/hi'
+import PageNav from './Atoms/PageNav';
 
 const CandidateForm = ({handlePageChange}) => {
     const { values } = useFormikContext()
@@ -108,11 +107,10 @@ const CandidateForm = ({handlePageChange}) => {
                     )}
                 />
             </Table>
-            <Row>
-                <Col>
-                    <Button onClick={() => handlePageChange('followups')}>Save and continue</Button>
-                </Col>
-            </Row>
+            <PageNav
+                handlePageChange={handlePageChange}
+                forward={{key:'followups', label:'Followups'}}
+            />
         </React.Fragment>
     );
 };

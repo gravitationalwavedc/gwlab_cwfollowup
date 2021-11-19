@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import {Col, Row, Nav, Tab} from 'react-bootstrap';
 import { Formik, Form } from 'formik';
-import JobTitle from './JobTitle';
-import CandidateForm from './CandidateForm';
-import FollowupsForm from './FollowupsForm';
-import ReviewJob from './ReviewJob';
-import initialValues from './initialValues';
-import validationSchema from './validationSchema';
+import JobTitle from '../Components/Forms/JobTitle';
+import CandidateForm from '../Components/Forms/CandidateForm';
+import FollowupsForm from '../Components/Forms/FollowupsForm';
+import ReviewJob from '../Components/Forms/ReviewJob';
+import initialValues from '../Components/Forms/initialValues';
+import validationSchema from '../Components/Forms/validationSchema';
 import { createFragmentContainer, graphql, commitMutation } from 'react-relay';
 import _ from "lodash";
-import { harnessApi } from '../../index';
+import { harnessApi } from '../index';
 
 const submitMutation = graphql`
-    mutation FormTabsNewJobMutation($input: CWFollowupJobMutationInput!) {
+    mutation JobFormNewJobMutation($input: CWFollowupJobMutationInput!) {
         newCwfollowupJob(input: $input) {
             result {
                 jobId
@@ -22,7 +22,7 @@ const submitMutation = graphql`
 `;
 
 
-const FormTabs = ({ data, match, router }) => {
+const JobForm = ({ data, match, router }) => {
     const viterbiId = match.location.state && match.location.state.jobId
     const jobData = data && data.viterbi.viterbiJob
     const candidateData = data && data.viterbiJobCandidates
@@ -81,7 +81,6 @@ const FormTabs = ({ data, match, router }) => {
             onSubmit={(values) => handleJobSubmission(values, viterbiId)}
         >
             <Form>
-
                 <Row>
                     <Col md={2}/>
                     <Col md={8} style={{minHeight: '110px'}}>
@@ -117,11 +116,11 @@ const FormTabs = ({ data, match, router }) => {
                                 <Tab.Pane eventKey="candidates">
                                     <CandidateForm handlePageChange={setKey}/>
                                 </Tab.Pane>
-                                <Tab.Pane eventKey="followups">
+                                <Tab.Pane data-testid="followupsPane" eventKey="followups">
                                     <FollowupsForm handlePageChange={setKey}/>
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="review">
-                                    <ReviewJob />
+                                    <ReviewJob handlePageChange={setKey}/>
                                 </Tab.Pane>
                             </Tab.Content>
                         </Col>
@@ -132,10 +131,10 @@ const FormTabs = ({ data, match, router }) => {
     )
 }
 
-export default createFragmentContainer(FormTabs,
+export default createFragmentContainer(JobForm,
     {
         data: graphql`
-            fragment FormTabs_data on Query @argumentDefinitions(
+            fragment JobForm_data on Query @argumentDefinitions(
                 jobId: {type: "ID!"}
             ) {
                 viterbi {
