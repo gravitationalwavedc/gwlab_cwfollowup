@@ -5,7 +5,9 @@ import { Form } from 'react-bootstrap';
 const Input = ({title, name, type, ...rest}) => {
     const { getFieldProps, touched, errors } = useFormikContext()
     return <Form.Group controlId={ name }>
-        <Form.Label>{ title }</Form.Label>
+        {
+            title && <Form.Label>{title}</Form.Label>
+        }
         <Form.Control 
             name={ name }
             type={ type } 

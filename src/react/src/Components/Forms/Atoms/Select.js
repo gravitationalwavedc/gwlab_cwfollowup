@@ -5,7 +5,9 @@ import { useFormikContext, getIn } from 'formik';
 const Select = ({ title, name, options }) => {
     const { values, touched, errors, handleChange } = useFormikContext()
     return <React.Fragment>
-        <Form.Label>{title}</Form.Label>
+        {
+            title && <Form.Label>{title}</Form.Label>
+        }
         <Form.Control
             id={name}
             name={name}

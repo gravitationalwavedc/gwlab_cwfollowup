@@ -114,7 +114,7 @@ const JobForm = ({ data, match, router }) => {
                         <Col md={8}>
                             <Tab.Content>
                                 <Tab.Pane eventKey="candidates">
-                                    <CandidateForm handlePageChange={setKey}/>
+                                    <CandidateForm handlePageChange={setKey} viterbiId={viterbiId}/>
                                 </Tab.Pane>
                                 <Tab.Pane data-testid="followupsPane" eventKey="followups">
                                     <FollowupsForm handlePageChange={setKey}/>

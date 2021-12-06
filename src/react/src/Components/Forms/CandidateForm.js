@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Col, Row, Table} from 'react-bootstrap';
+import {Button, Table} from 'react-bootstrap';
 import Input from './Atoms/Input';
 import Switch from './Atoms/Switch';
 import Select from './Atoms/Select';
@@ -7,8 +7,9 @@ import { FieldArray, useFormikContext, getIn } from 'formik';
 import initialValues from './initialValues';
 import { HiOutlineX, HiOutlinePlus } from 'react-icons/hi'
 import PageNav from './Atoms/PageNav';
+import CSVUpload from './Atoms/CSVUpload';
 
-const CandidateForm = ({handlePageChange}) => {
+const CandidateForm = ({ handlePageChange, viterbiId }) => {
     const { values } = useFormikContext()
     return (
         <React.Fragment>
@@ -30,13 +31,13 @@ const CandidateForm = ({handlePageChange}) => {
                             {
                                 values.candidates.map((candidate, index) => (
                                     <tr key={index}>
-                                        <td>
+                                        <td className="align-top">
                                             <Input
                                                 name={`candidates.${index}.candidateFrequency`}
                                                 type="number"
                                             />
                                         </td>
-                                        <td>
+                                        <td className="align-top">
                                             <Select
                                                 name={`candidates.${index}.sourceDataset`} 
                                                 options={[
@@ -47,7 +48,7 @@ const CandidateForm = ({handlePageChange}) => {
                                             ]}  
                                             />
                                         </td>
-                                        <td>
+                                        <td className="align-top">
                                             <Switch
                                                 name={`candidates.${index}.targetBinary`}
                                                 labelOn="Yes"
@@ -57,19 +58,19 @@ const CandidateForm = ({handlePageChange}) => {
                                         {
                                             getIn(values, `candidates.${index}.targetBinary`) ?
                                             <React.Fragment>
-                                                <td>
+                                                <td className="align-top">
                                                     <Input
                                                         name={`candidates.${index}.orbitPeriod`}
                                                         type="number"
                                                     />
                                                 </td>
-                                                <td>
+                                                <td className="align-top">
                                                     <Input
                                                         name={`candidates.${index}.asini`}
                                                         type="number"
                                                     />
                                                 </td>
-                                                <td>
+                                                <td className="align-top">
                                                     <Input
                                                         name={`candidates.${index}.orbitTp`}
                                                         type="number"
@@ -78,12 +79,12 @@ const CandidateForm = ({handlePageChange}) => {
                                             </React.Fragment>
                                             :
                                             <React.Fragment>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
+                                                <td className="align-top"></td>
+                                                <td className="align-top"></td>
+                                                <td className="align-top"></td>
                                             </React.Fragment>
                                         }
-                                        <td>
+                                        <td className="align-top">
                                             <Button
                                                 onClick={() => remove(index)}
                                             >
@@ -93,16 +94,64 @@ const CandidateForm = ({handlePageChange}) => {
                                     </tr>
                                 ))
                             }
-                            <tr>
-                                <td>
+                            {
+                                !viterbiId && <tr>
+                                    <td>
+                                        <CSVUpload
+                                            saveData={data => {
+                                                data.forEach(
+                                                    candidate => {
+                                                        push({
+                                                            candidateFrequency: candidate[0],
+                                                            sourceDataset: candidate[1],
+                                                            targetBinary: candidate[2],
+                                                            orbitPeriod: candidate[3],
+                                                            asini: candidate[4],
+                                                            orbitTp: candidate[5],
+                                                        })
+                                                    }
+                                                )
+                                            }}
+                                            checkData={data => {
+                                                for (var i = 0; i < data.length; i++) {
+                                                    var row = i+1
+                                                    var candidate = data[i]
 
-                                    <Button
-                                        onClick={() => push(initialValues.candidates[0])}
-                                    >
-                                        <HiOutlinePlus />
-                                    </Button>
-                                </td>
-                            </tr>
+                                                    if (candidate.length && candidate.length < 6) {
+                                                        return `Row ${row} doesn't have enough columns`
+                                                    } else if (isNaN(candidate[0])){
+                                                        return `Row ${row}, column 1 must be a number`
+                                                    } else if (!['o1', 'o2', 'o3', 'o4'].includes(candidate[1])){
+                                                        return `Row ${row}, column 2 must be in the range O1-4`
+                                                    } else if (!(typeof candidate[2] == "boolean")) {
+                                                        return `Row ${row}, column 3 is not boolean`
+                                                    } else if (isNaN(candidate[3])){
+                                                        return `Row ${row}, column 4 must be a number`
+                                                    } else if (isNaN(candidate[4])){
+                                                        return `Row ${row}, column 5 must be a number`
+                                                    } else if (isNaN(candidate[5])){
+                                                        return `Row ${row}, column 6 must be a number`
+                                                    }
+                                                }
+                                                return null
+                                            }}
+                                            text='Upload candidates from CSV'
+                                        />
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <Button
+                                            onClick={() => push(initialValues.candidates[0])}
+                                        >
+                                            <HiOutlinePlus />
+                                        </Button>
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     )}
                 />
