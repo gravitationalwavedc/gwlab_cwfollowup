@@ -35,6 +35,7 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                             <Input
                                                 name={`candidates.${index}.candidateFrequency`}
                                                 type="number"
+                                                className='px-3'
                                             />
                                         </td>
                                         <td className="align-top">
@@ -45,7 +46,8 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                                     {label:'O2', value: 'o2'},
                                                     {label:'O3', value: 'o3'},
                                                     {label:'O4', value: 'o4'},
-                                            ]}  
+                                                ]}
+                                                className='px-3'
                                             />
                                         </td>
                                         <td className="align-top">
@@ -62,18 +64,21 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                                     <Input
                                                         name={`candidates.${index}.orbitPeriod`}
                                                         type="number"
+                                                        className='px-3'
                                                     />
                                                 </td>
                                                 <td className="align-top">
                                                     <Input
                                                         name={`candidates.${index}.asini`}
                                                         type="number"
+                                                        className='px-3'
                                                     />
                                                 </td>
                                                 <td className="align-top">
                                                     <Input
                                                         name={`candidates.${index}.orbitTp`}
                                                         type="number"
+                                                        className='px-3'
                                                     />
                                                 </td>
                                             </React.Fragment>
