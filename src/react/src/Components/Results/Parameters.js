@@ -2,6 +2,7 @@ import React from 'react';
 import {Button, Col, Row, Table,} from 'react-bootstrap';
 import FormCard from '../Forms/FormCard';
 import _ from 'lodash';
+import followupOptions from '../../Utils/followupOptions';
 
 const Parameters = ({ candidates, followups }) => {
 
@@ -56,10 +57,19 @@ const Parameters = ({ candidates, followups }) => {
                 <FormCard title="Followups">
                     <Table>
                         <tbody>
-                            <tr>
-                                <th>Followups</th>
-                                <td className="text-right">{followups}</td>
-                            </tr>
+                            {
+                                followups.map((followup, index) => {
+                                    const followupObj = followupOptions.find(obj => {
+                                        return obj.value === followup
+                                    })
+                                    return <tr key={index}>
+                                        <th>{followupObj.label}</th>
+                                        <td className="text-right">{followupObj.shortDescription}</td>
+                                    </tr>
+                                }
+
+                                )
+                            }
                         </tbody>
                     </Table>
                 </FormCard>
