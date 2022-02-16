@@ -5,7 +5,7 @@ services:
     build:
       dockerfile: ./docker/gwlab_cwfollowup_django.Dockerfile
       context: .
-    image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_django:0.1
+    image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_django:0.2
     container_name: gwlab_cwfollowup_django
     environment:
       MYSQL_ROOT_PASSWORD: 76vcqmGKP19Z1AEx
@@ -34,7 +34,7 @@ services:
     build:
       dockerfile: ./docker/gwlab_cwfollowup_static.Dockerfile
       context: .
-    image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_static:0.1
+    image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_static:0.2
     container_name: gwlab_cwfollowup_static
     ports:
       - "8000"
