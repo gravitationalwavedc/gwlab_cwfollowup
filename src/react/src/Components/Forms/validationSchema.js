@@ -18,7 +18,7 @@ let validationSchema = Yup.object().shape({
     ).required('Must have candidates')
     .min(1, 'Minimum of 1 candidate'),
 
-    followupChoices: Yup.array(Yup.string()).min(1),
+    followupChoices: Yup.array(Yup.string()).min(1, 'Include at least 1 followup'),
 });
 
 export default validationSchema;

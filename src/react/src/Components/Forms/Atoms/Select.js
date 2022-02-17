@@ -2,7 +2,7 @@ import React from 'react';
 import { Form } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 
-const Select = ({ title, name, options }) => {
+const Select = ({ title, name, options, ...rest }) => {
     const { values, touched, errors, handleChange } = useFormikContext()
     return <React.Fragment>
         {
@@ -16,6 +16,7 @@ const Select = ({ title, name, options }) => {
             onChange={handleChange}
             isValid={touched[name] && !errors[name]}
             isInvalid={!!errors[name]}
+            {...rest}
         >
             {options.map(({label, value}) =>
                 <option
