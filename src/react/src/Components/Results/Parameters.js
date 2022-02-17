@@ -1,10 +1,10 @@
 import React from 'react';
-import {Col, Row, Table,} from 'react-bootstrap';
+import {Button, Col, Row, Table,} from 'react-bootstrap';
 import FormCard from '../Forms/FormCard';
 import _ from 'lodash';
 import followupOptions from '../../Utils/followupOptions';
 
-const Parameters = ({ candidates, followups }) => {
+const Parameters = ({ candidates, followups }) => (
     <Row>
         <Col>
             <FormCard title="Candidate Parameters">
@@ -68,7 +68,7 @@ const Parameters = ({ candidates, followups }) => {
                 </Table>
             </FormCard>
         </Col>
-    </Row>;
-};
+    </Row>
+);
 
 export default Parameters;
