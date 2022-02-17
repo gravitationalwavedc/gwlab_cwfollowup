@@ -1,10 +1,9 @@
 import React from 'react';
-import {render, screen, waitFor} from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FollowupCard from '../FollowupCard';
 import { Formik } from 'formik';
 
-/* global environment, router */
 describe('FollowupCard component', () => {
     const TestFollowupCard = () => (
         <Formik initialValues={{test: []}}>
@@ -30,7 +29,7 @@ describe('FollowupCard component', () => {
         const { getByLabelText, queryByLabelText } = render(<TestFollowupCard />);
         expect(getByLabelText('Off')).toBeInTheDocument();
 
-        userEvent.click(getByLabelText('Off'))
+        userEvent.click(getByLabelText('Off'));
 
         expect(queryByLabelText('Off')).not.toBeInTheDocument();
         expect(getByLabelText('On')).toBeInTheDocument();

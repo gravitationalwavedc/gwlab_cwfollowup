@@ -61,7 +61,7 @@ const Parameters = ({ candidates, followups }) => {
                                 followups.map((followup, index) => {
                                     const followupObj = followupOptions.find(obj => {
                                         return obj.value === followup
-                                    })
+                                    });
                                     return <tr key={index}>
                                         <th>{followupObj.label}</th>
                                         <td className="text-right">{followupObj.shortDescription}</td>
