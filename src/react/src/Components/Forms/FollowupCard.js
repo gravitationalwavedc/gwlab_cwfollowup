@@ -3,7 +3,7 @@ import { Form, Card } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
 
 const FollowupCard = ({name, label, value, description}) => {
-    const { values, touched, errors, handleChange } = useFormikContext()
+    const { values, touched, errors, handleChange } = useFormikContext();
     const checked = values[name].indexOf(value) !== -1;
 
     return (
