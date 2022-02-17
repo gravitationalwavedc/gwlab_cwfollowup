@@ -83,11 +83,7 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                                 </td>
                                             </React.Fragment>
                                             :
-                                            <React.Fragment>
-                                                <td className="align-top"></td>
-                                                <td className="align-top"></td>
-                                                <td className="align-top"></td>
-                                            </React.Fragment>
+                                            <td colSpan={3}/>
                                         }
                                         <td className="align-top">
                                             <Button
