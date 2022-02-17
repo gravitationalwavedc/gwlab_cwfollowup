@@ -139,11 +139,7 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                             text='Upload candidates from CSV'
                                         />
                                     </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td colSpan={5}/>
                                     <td>
                                         <Button
                                             onClick={() => push(initialValues.candidates[0])}

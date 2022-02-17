@@ -15,4 +15,4 @@ const followupOptions = [
     }
 ]
 
-export default followupOptions
+export default followupOptions;

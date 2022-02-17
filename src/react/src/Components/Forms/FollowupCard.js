@@ -4,7 +4,7 @@ import { useFormikContext } from 'formik';
 
 const FollowupCard = ({name, label, value, description}) => {
     const { values, touched, errors, handleChange } = useFormikContext()
-    const checked = values[name].indexOf(value) !== -1
+    const checked = values[name].indexOf(value) !== -1;
 
     return (
         <Card text={checked ? 'black' : 'muted'}>

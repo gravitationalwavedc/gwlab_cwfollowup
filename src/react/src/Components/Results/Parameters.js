@@ -65,10 +65,8 @@ const Parameters = ({ candidates, followups }) => {
                                     return <tr key={index}>
                                         <th>{followupObj.label}</th>
                                         <td className="text-right">{followupObj.shortDescription}</td>
-                                    </tr>
-                                }
-
-                                )
+                                    </tr>;
+                                })
                             }
                         </tbody>
                     </Table>

@@ -1,12 +1,11 @@
 import React from 'react';
-import {Button, Col, Row} from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import FormCard from './FormCard';
-import CheckGroup from './Atoms/CheckGroup';
 import PageNav from './Atoms/PageNav';
-import followupOptions from '../../Utils/followupOptions'
+import followupOptions from '../../Utils/followupOptions';
 import FollowupCard from './FollowupCard';
 
-const FollowupsForm = ({handlePageChange}) => {
+const FollowupsForm = ({ handlePageChange }) => {
     return (
         <React.Fragment>
             <Row>
