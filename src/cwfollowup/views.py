@@ -32,13 +32,12 @@ def get_viterbi_result_files(info, job_id):
     }
     """
     variables = {"jobId": job_id}
-    result = perform_viterbi_query(
+    return perform_viterbi_query(
         query=query,
         variables=variables,
         headers=info.context.headers,
         method=info.context.method
     )
-    return json.loads(result.content)['data']
 
 
 def get_min_start_time(info, job_id):
@@ -76,7 +75,8 @@ def get_viterbi_candidates(info, job_id):
     source_dataset = get_source_dataset(info, job_id)
     file_list = get_viterbi_result_files(info, job_id)['viterbiResultFiles']['files']
     candidate_file = next(filter(lambda f: 'results_a0_phase_loglikes_scores.dat' in f['path'], file_list))
-    candidate_file_data = requests.get('https://gwcloud.org.au/job/apiv1/file/?fileId=' + candidate_file['downloadId'])
+    file_url = settings.GWCLOUD_JOB_CONTROLLER_API_URL + '/file/?fileId=' + candidate_file['downloadId']
+    candidate_file_data = requests.get(file_url)
     candidates = []
     for candidate_data in candidate_file_data.text.strip().split('\n'):
         candidate = candidate_data.split()
