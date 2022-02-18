@@ -9,6 +9,9 @@ from .models import CWFollowupJob, CWFollowup, CWJob, CWJobCandidate
 
 
 def perform_viterbi_query(query, variables, headers, method):
+    print('VITERBI QUERY: ', query)
+    print('VITERBI VARIABLES: ', variables)
+    print('VITERBI HEADERS: ', headers)
     result = requests.request(
         method=method,
         url=settings.GWLAB_VITERBI_GRAPHQL_URL,
