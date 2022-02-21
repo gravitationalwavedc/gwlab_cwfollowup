@@ -32,7 +32,7 @@ class TestViterbiSchemaViews(CwFollowupTestCase):
             }
         }
         self.assertEqual(get_viterbi_result_files(self.mock_info, 1), VITERBI_FILE_LIST)
-    
+
     @mock.patch('cwfollowup.views.perform_viterbi_query')
     def test_get_min_start_time(self, perform_viterbi_query_mock):
         start_time = 1000
@@ -53,14 +53,14 @@ class TestViterbiSchemaViews(CwFollowupTestCase):
         self.assertEqual(get_source_dataset(self.mock_info, 1), 'o1')
         min_start_time_mock.return_value = 1137254417
         self.assertEqual(get_source_dataset(self.mock_info, 1), 'o1')
-    
+
         min_start_time_mock.return_value = 1164556817
         self.assertEqual(get_source_dataset(self.mock_info, 1), 'o2')
         min_start_time_mock.return_value = (1164556817 + 1187733618)/2
         self.assertEqual(get_source_dataset(self.mock_info, 1), 'o2')
         min_start_time_mock.return_value = 1187733618
         self.assertEqual(get_source_dataset(self.mock_info, 1), 'o2')
-    
+
         min_start_time_mock.return_value = 1238166018
         self.assertEqual(get_source_dataset(self.mock_info, 1), 'o3')
         min_start_time_mock.return_value = (1238166018 + 1269388818)/2

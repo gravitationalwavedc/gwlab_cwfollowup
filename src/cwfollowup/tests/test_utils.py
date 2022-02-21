@@ -12,6 +12,7 @@ def silence_errors(func):
             logging.disable(logging.NOTSET)
     return wrapper_silence_errors
 
+
 VITERBI_FILE_LIST = [
     {
         "path": "/archive.tar.gz",
