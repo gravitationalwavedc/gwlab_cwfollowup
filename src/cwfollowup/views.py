@@ -32,12 +32,13 @@ def get_viterbi_result_files(info, job_id):
     }
     """
     variables = {"jobId": job_id}
-    return perform_viterbi_query(
+    result = perform_viterbi_query(
         query=query,
         variables=variables,
         headers=info.context.headers,
         method=info.context.method
     )
+    return result['viterbiResultFiles']['files']
 
 
 def get_min_start_time(info, job_id):
@@ -68,12 +69,12 @@ def get_source_dataset(info, job_id):
     elif 1238166018 <= min_start_time <= 1269388818:  # O3a start time to end of O3b (approximately)
         return 'o3'
     else:
-        return 'o3'
+        return None
 
 
 def get_viterbi_candidates(info, job_id):
     source_dataset = get_source_dataset(info, job_id)
-    file_list = get_viterbi_result_files(info, job_id)['viterbiResultFiles']['files']
+    file_list = get_viterbi_result_files(info, job_id)
     candidate_file = next(filter(lambda f: 'results_a0_phase_loglikes_scores.dat' in f['path'], file_list))
     file_url = settings.GWCLOUD_JOB_CONTROLLER_API_URL + '/file/?fileId=' + candidate_file['downloadId']
     candidate_file_data = requests.get(file_url)
