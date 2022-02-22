@@ -11,7 +11,6 @@ const ReviewJob = ({ handlePageChange }) => {
 
     const submitReview = async () => {
         const errors = await validateForm();
-        console.log(values, errors);
         setErrors(Object.keys(errors));
 
         if (Object.keys(errors).length === 0 && errors.constructor === Object) {
