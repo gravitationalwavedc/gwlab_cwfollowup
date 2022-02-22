@@ -96,6 +96,7 @@ class TestViterbiSchemaViews(CwFollowupTestCase):
                 'orbit_period': 4995.263,
                 'asini': 0.01844,
                 'orbit_tp': 1238160133.5651631,
+                'target_binary': True,
                 'candidate_frequency': 188.39773843088648,
                 'source_dataset': 'o2'
             },
@@ -103,6 +104,7 @@ class TestViterbiSchemaViews(CwFollowupTestCase):
                 'orbit_period': 4995.263,
                 'asini': 0.01844,
                 'orbit_tp': 1238160166.1664348,
+                'target_binary': True,
                 'candidate_frequency': 188.80117342528672,
                 'source_dataset': 'o2'
             },
@@ -110,6 +112,7 @@ class TestViterbiSchemaViews(CwFollowupTestCase):
                 'orbit_period': 4995.263,
                 'asini': 0.01844,
                 'orbit_tp': 1238160198.7677066,
+                'target_binary': True,
                 'candidate_frequency': 188.4588963880759,
                 'source_dataset': 'o2'
             }

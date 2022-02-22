@@ -147,6 +147,7 @@ export default createFragmentContainer(JobForm,
                     orbitPeriod
                     asini
                     orbitTp
+                    targetBinary
                     candidateFrequency
                     sourceDataset
                 }

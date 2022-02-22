@@ -85,6 +85,7 @@ def get_viterbi_candidates(info, job_id):
             'orbit_period': float(candidate[0]),
             'asini': float(candidate[1]),
             'orbit_tp': float(candidate[2]),
+            'target_binary': all(candidate[0:3]),
             'candidate_frequency': float(candidate[5]),
             'source_dataset': source_dataset
         })
