@@ -51,9 +51,10 @@ class JobStatusType(ObjectType):
 class CandidateInputType(InputObjectType):
     source_dataset = String()
     candidate_frequency = Float()
-    orbit_period = Float()
-    orbit_tp = Float()
-    asini = Float()
+    target_binary = Boolean()
+    orbit_period = Float(required=False)
+    orbit_tp = Float(required=False)
+    asini = Float(required=False)
 
 
 class CandidateType(DjangoObjectType):

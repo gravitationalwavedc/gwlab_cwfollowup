@@ -10,7 +10,8 @@ import PageNav from './Atoms/PageNav';
 import CSVUpload from './Atoms/CSVUpload';
 
 const CandidateForm = ({ handlePageChange, viterbiId }) => {
-    const { values } = useFormikContext();
+    const { values, setFieldValue } = useFormikContext();
+    const defaultData = initialValues.candidates[0];
     return (
         <React.Fragment>
             <Table>
@@ -100,15 +101,16 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                     <td>
                                         <CSVUpload
                                             saveData={data => {
+                                                setFieldValue('candidates', []);
                                                 data.forEach(
                                                     candidate => {
                                                         push({
                                                             candidateFrequency: candidate[0],
                                                             sourceDataset: candidate[1],
                                                             targetBinary: candidate[2],
-                                                            orbitPeriod: candidate[3],
-                                                            asini: candidate[4],
-                                                            orbitTp: candidate[5],
+                                                            orbitPeriod: candidate[3] || defaultData.orbitPeriod,
+                                                            asini: candidate[4] || defaultData.asini,
+                                                            orbitTp: candidate[5] || defaultData.orbitTp,
                                                         });
                                                     }
                                                 );
@@ -142,7 +144,7 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                     <td colSpan={5}/>
                                     <td>
                                         <Button
-                                            onClick={() => push(initialValues.candidates[0])}
+                                            onClick={() => push(defaultData)}
                                         >
                                             <HiOutlinePlus />
                                         </Button>

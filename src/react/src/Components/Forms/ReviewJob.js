@@ -7,11 +7,11 @@ import PageNav from './Atoms/PageNav';
 
 const ReviewJob = ({ handlePageChange }) => {
     const [errors, setErrors] = useState([]);
-    const { values, handleSubmit, validateForm } = useFormikContext()
+    const { values, handleSubmit, validateForm } = useFormikContext();
 
     const submitReview = async () => {
         const errors = await validateForm();
-        setErrors(Object.values(errors));
+        setErrors(Object.keys(errors));
 
         if (Object.keys(errors).length === 0 && errors.constructor === Object) {
             handleSubmit();
@@ -21,8 +21,9 @@ const ReviewJob = ({ handlePageChange }) => {
     return (
         <React.Fragment>
             <Parameters candidates={values.candidates} followups={values.followupChoices} />
-            {errors && <Row>
-                <Col>
+            {errors.length > 0 && <Row>
+                <Col className="text-danger">
+                    Errors are present in:
                     <ul>{errors.map(value => <li className="text-danger" key={value}>{value}</li>)}</ul>
                 </Col>
             </Row>}
@@ -32,7 +33,7 @@ const ReviewJob = ({ handlePageChange }) => {
                 forward={{key: 'submit', label: 'Submit'}}
                 handleSubmit={submitReview}/>
         </React.Fragment>
-    )
+    );
 };
 
 export default ReviewJob;

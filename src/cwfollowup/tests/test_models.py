@@ -107,3 +107,35 @@ class TestCWJobModel(TestCase):
                 viterbi_id=1
             )
             cw_job3.save()
+
+
+class TestCandidateModel(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.cw_job = CWJob(
+            user_id=1,
+            is_uploaded=True,
+        )
+        cls.cw_job.save()
+
+    def test_update_privacy(self):
+        """
+        Check that Candidate model sets orbit_tp, asini and orbit_period None
+        if the candidate is not a binary
+        """
+        candidate_data = data['candidates'][0]
+
+        candidate_model_binary = CWJobCandidate(job=self.cw_job, **candidate_data)
+        candidate_model_binary.save()
+
+        self.assertEqual(candidate_model_binary.orbit_tp, candidate_data['orbit_tp'])
+        self.assertEqual(candidate_model_binary.asini, candidate_data['asini'])
+        self.assertEqual(candidate_model_binary.orbit_period, candidate_data['orbit_period'])
+
+        candidate_data['target_binary'] = False
+        candidate_model_not_binary = CWJobCandidate(job=self.cw_job, **candidate_data)
+        candidate_model_not_binary.save()
+
+        self.assertEqual(candidate_model_not_binary.orbit_tp, None)
+        self.assertEqual(candidate_model_not_binary.asini, None)
+        self.assertEqual(candidate_model_not_binary.orbit_period, None)

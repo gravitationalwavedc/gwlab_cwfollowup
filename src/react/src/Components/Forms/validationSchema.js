@@ -1,5 +1,11 @@
 import * as Yup from 'yup';
 
+Yup.setLocale({
+    mixed: {
+        required: 'Required field'
+    },
+});
+
 let validationSchema = Yup.object().shape({
     name: Yup.string()
         .min(5, 'Make the title longer than 5 characters.')
@@ -11,12 +17,31 @@ let validationSchema = Yup.object().shape({
         Yup.object().shape({
             candidateFrequency: Yup.number().required(),
             sourceDataset: Yup.string().required(),
-            orbitTp: Yup.number().required(),
-            asini: Yup.number().required(),
-            orbitPeriod: Yup.number().required()
+            targetBinary: Yup.boolean().required(),
+            orbitTp: Yup.number().when(
+                'targetBinary', {
+                    is: true,
+                    then: Yup.number().required(),
+                    otherwise: Yup.number().nullable()
+                }
+            ),
+            asini: Yup.number().when(
+                'targetBinary', {
+                    is: true,
+                    then: Yup.number().required(),
+                    otherwise: Yup.number().nullable()
+                }
+            ),
+            orbitPeriod: Yup.number().when(
+                'targetBinary', {
+                    is: true,
+                    then: Yup.number().required(),
+                    otherwise: Yup.number().nullable()
+                }
+            ),
         })
     ).required('Must have candidates')
-    .min(1, 'Minimum of 1 candidate'),
+        .min(1, 'Include at least 1 candidate'),
 
     followupChoices: Yup.array(Yup.string()).min(1, 'Include at least 1 followup'),
 });

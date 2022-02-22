@@ -3,30 +3,30 @@ import { CSVReader } from 'react-papaparse';
 import { Button } from 'react-bootstrap';
 
 const CSVUpload = ({ saveData, checkData, text }) => {
-    const [error, setError] = useState(null)
-    const buttonRef = useRef(null)
+    const [error, setError] = useState(null);
+    const buttonRef = useRef(null);
 
     const handleOpenDialog = (e) => {
         // Note that the ref is set async, so it might be null at some point 
         if (buttonRef.current) {
-          buttonRef.current.open(e)
+            buttonRef.current.open(e);
         }
-      }
+    };
 
     const onFileLoad = (data) => {
         const newData = data.map(
             value => {
                 if (value.data.length) {
-                    return value.data
+                    return value.data;
                 }
             }
-        )
-        const errMessage = checkData(newData)
-        setError(errMessage)
+        );
+        const errMessage = checkData(newData);
+        setError(errMessage);
         if (errMessage == null) {
-            saveData(newData)
+            saveData(newData);
         }
-    }
+    };
 
     return <CSVReader
         onFileLoad={onFileLoad}
@@ -40,18 +40,16 @@ const CSVUpload = ({ saveData, checkData, text }) => {
         }}
     >
         {
-            ({ file }) => {
-                return <React.Fragment>
-                    <Button onClick={handleOpenDialog}>
-                        {text}
-                    </Button>
-                    <div>
-                        {error}
-                    </div>
-                </React.Fragment>
-            }
+            () => <React.Fragment>
+                <Button onClick={handleOpenDialog}>
+                    {text}
+                </Button>
+                <div>
+                    {error}
+                </div>
+            </React.Fragment>
         }
-    </CSVReader>
-}
+    </CSVReader>;
+};
 
-export default CSVUpload
+export default CSVUpload;
