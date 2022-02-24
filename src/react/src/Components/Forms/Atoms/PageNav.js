@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Row, Navbar } from 'react-bootstrap';
+import { Button, Col, Row } from 'react-bootstrap';
 import { HiChevronRight, HiChevronLeft } from 'react-icons/hi';
 
 const PageNav = ({handlePageChange, forward, backward, handleSubmit }) => {
@@ -27,15 +27,6 @@ const PageNav = ({handlePageChange, forward, backward, handleSubmit }) => {
                     </Button>
                 </Col>
             </Row>
-
-            <Navbar fixed="bottom" className="justify-content-center d-md-none top-shadow">
-                { backward && <Button variant="tertiary" onClick={() => handlePageChange(backward.key)}>
-                    <HiChevronLeft/>{backward.label}
-                </Button>}
-                <Button onClick={handleForward}>
-                    {forward.label}{!isSubmitForm && <HiChevronRight/>}
-                </Button>
-            </Navbar>
         </>);
 };
 export default PageNav;

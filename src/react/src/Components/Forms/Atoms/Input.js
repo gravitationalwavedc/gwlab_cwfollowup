@@ -10,7 +10,8 @@ const Input = ({title, name, type, ...rest}) => {
         {
             title && <Form.Label>{title}</Form.Label>
         }
-        <Form.Control 
+        <Form.Control
+            label={ name }
             name={ name }
             type={ type } 
             isValid={isTouched && !error}

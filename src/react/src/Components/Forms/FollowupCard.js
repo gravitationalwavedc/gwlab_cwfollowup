@@ -1,32 +1,24 @@
 import React from 'react';
-import { Form, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { useFormikContext } from 'formik';
+import Switch from './Atoms/Switch';
 
 const FollowupCard = ({name, label, value, description}) => {
-    const { values, touched, errors, handleChange } = useFormikContext();
+    const { values } = useFormikContext();
     const checked = values[name].indexOf(value) !== -1;
-
     return (
         <Card text={checked ? 'black' : 'muted'}>
             <Card.Header className="h4">
                 {label}
-                <Form.Group className="float-right" controlId={ name }>
-                    <Form.Check
-                        custom
-                        id={name + label}
-                        label={checked ? 'On' : 'Off'}
-                        type="switch"
-                        name={name}
-                        value={value}
-                        onChange={handleChange}
-                        isValid={touched[name] && !errors[name]}
-                        isInvalid={!!errors[name]}
-                        checked={checked}
-                    />
-                    <Form.Control.Feedback type='invalid'>
-                        {errors[name]}
-                    </Form.Control.Feedback>
-                </Form.Group>
+                <Switch
+                    className="float-right"
+                    id={name+label}
+                    name={name}
+                    value={value}
+                    labelOn='On'
+                    labelOff='Off'
+                    checked={checked}
+                />
             </Card.Header>
             <Card.Body>
                 {description}

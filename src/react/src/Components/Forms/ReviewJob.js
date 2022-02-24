@@ -6,14 +6,12 @@ import Parameters from '../Results/Parameters';
 import PageNav from './Atoms/PageNav';
 
 const ReviewJob = ({ handlePageChange }) => {
-    const [errors, setErrors] = useState([]);
-    const { values, handleSubmit, validateForm } = useFormikContext();
+    const { values, errors, handleSubmit, validateForm } = useFormikContext();
+    const errorKeys = Object.keys(errors);
 
     const submitReview = async () => {
-        const errors = await validateForm();
-        setErrors(Object.keys(errors));
-
-        if (Object.keys(errors).length === 0 && errors.constructor === Object) {
+        const errors = await validateForm();  // Final check
+        if (Object.keys(errors).length === 0) {
             handleSubmit();
         }
     };
@@ -21,10 +19,10 @@ const ReviewJob = ({ handlePageChange }) => {
     return (
         <React.Fragment>
             <Parameters candidates={values.candidates} followups={values.followupChoices} />
-            {errors.length > 0 && <Row>
+            {errorKeys.length > 0 && <Row>
                 <Col className="text-danger">
                     Errors are present in:
-                    <ul>{errors.map(value => <li className="text-danger" key={value}>{value}</li>)}</ul>
+                    <ul>{errorKeys.map(value => <li className="text-danger" key={value}>{value}</li>)}</ul>
                 </Col>
             </Row>}
             <PageNav

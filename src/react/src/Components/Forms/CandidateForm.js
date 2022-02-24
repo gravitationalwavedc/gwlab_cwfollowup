@@ -89,6 +89,7 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                         <td className="align-top">
                                             <Button
                                                 onClick={() => remove(index)}
+                                                data-testid={`remove-candidate-button-${index}`}
                                             >
                                                 <HiOutlineX />
                                             </Button>
@@ -145,6 +146,7 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                     <td>
                                         <Button
                                             onClick={() => push(defaultData)}
+                                            data-testid='add-candidate-button'
                                         >
                                             <HiOutlinePlus />
                                         </Button>
