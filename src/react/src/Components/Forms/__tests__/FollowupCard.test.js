@@ -1,37 +1,41 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FollowupCard from '../FollowupCard';
 import { Formik } from 'formik';
 
-describe('FollowupCard component', () => {
-    const TestFollowupCard = () => (
-        <Formik initialValues={{test: []}}>
-            <FollowupCard
-                name='test'
-                label='Test Label'
-                value='test_value'
-                description='Test description'
-            />
-        </Formik>
-    )
+describe('the followup card component', () => {
+    const formikWrapper = ({children}) => <Formik initialValues={{test: []}}>
+        {children}
+    </Formik>;
+
+    const renderTest = () => render(
+        <FollowupCard
+            name='test'
+            label='Test Label'
+            value='test_value'
+            description='Test description'
+        />,
+        {wrapper: formikWrapper}
+    );
+
 
     it('renders', () => {
         expect.hasAssertions();
-        const { getByText, getByLabelText } = render(<TestFollowupCard />);
-        expect(getByText('Test Label')).toBeInTheDocument();
-        expect(getByText('Test description')).toBeInTheDocument();
-        expect(getByLabelText('Off')).toBeInTheDocument();
+        renderTest();
+        expect(screen.getByText('Test Label')).toBeInTheDocument();
+        expect(screen.getByText('Test description')).toBeInTheDocument();
+        expect(screen.getByLabelText('Off')).toBeInTheDocument();
     });
     
     it('switch works as intended', () => {
         expect.hasAssertions();
-        const { getByLabelText, queryByLabelText } = render(<TestFollowupCard />);
-        expect(getByLabelText('Off')).toBeInTheDocument();
+        renderTest();
+        expect(screen.getByLabelText('Off')).toBeInTheDocument();
 
-        userEvent.click(getByLabelText('Off'));
+        userEvent.click(screen.getByLabelText('Off'));
 
-        expect(queryByLabelText('Off')).not.toBeInTheDocument();
-        expect(getByLabelText('On')).toBeInTheDocument();
+        expect(screen.queryByLabelText('Off')).not.toBeInTheDocument();
+        expect(screen.getByLabelText('On')).toBeInTheDocument();
     });
 });

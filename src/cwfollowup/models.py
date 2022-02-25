@@ -41,6 +41,14 @@ class CWJobCandidate(models.Model):
     asini = models.FloatField(null=True)
     orbit_period = models.FloatField(null=True)
 
+    def save(self, *args, **kwargs):
+        if not self.target_binary:
+            self.orbit_tp = None
+            self.asini = None
+            self.orbit_period = None
+
+        super().save(*args, **kwargs)
+
 
 # Model to hold all the information for a followup job
 # Can either use a Viterbi job or an uploaded job as a ForeignKey

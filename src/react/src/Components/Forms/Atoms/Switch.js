@@ -2,26 +2,30 @@ import React from 'react';
 import { Form } from 'react-bootstrap';
 import { useFormikContext, getIn } from 'formik';
 
-const Switch = ({ title, formik, name, value, labelOn, labelOff, ...props }) => {
-    const { handleChange, values, errors} = useFormikContext()
-    return <Form.Group controlId={ name }>
+const Switch = ({ id, title, name, value, labelOn, labelOff, checked, className, ...props }) => {
+    const { handleChange, values, errors, touched} = useFormikContext();
+    const isChecked = typeof checked == 'boolean' ? checked : getIn(values, name);
+    return <Form.Group controlId={name} className={className}>
         {
             title && <Form.Label>{title}</Form.Label>
         }
         <Form.Check 
             custom 
-            key={ name }
+            id={id}
+            key={name}
             type="switch" 
-            name={ name }
-            label={getIn(values, name) ? labelOn : labelOff}
-            value={true}
-            onChange={ handleChange } 
-            checked={ getIn(values, name) }
+            name={name}
+            label={isChecked ? labelOn : labelOff}
+            value={value}
+            onChange={handleChange}
+            isValid={getIn(touched, name) && !getIn(errors, name)}
+            isInvalid={!!getIn(errors, name)}
+            checked={isChecked}
             {...props}
         />
         <Form.Control.Feedback type='invalid'>
-            {errors[name]}
+            {getIn(errors, name)}
         </Form.Control.Feedback>
-    </Form.Group>};
+    </Form.Group>;};
 
 export default Switch;

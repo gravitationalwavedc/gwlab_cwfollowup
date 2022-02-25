@@ -64,6 +64,7 @@ class ViterbiJobCandidate(graphene.ObjectType):
     orbit_period = graphene.Float()
     asini = graphene.Float()
     orbit_tp = graphene.Float()
+    target_binary = graphene.Boolean()
     candidate_frequency = graphene.Float()
     source_dataset = graphene.String()
 
@@ -112,4 +113,3 @@ class Query(graphene.ObjectType):
 
     def resolve_viterbi_job_candidates(parent, info, job_id):
         return get_viterbi_candidates(info, job_id) if job_id else None
-

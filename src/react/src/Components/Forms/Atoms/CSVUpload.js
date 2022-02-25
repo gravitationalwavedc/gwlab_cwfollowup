@@ -1,38 +1,21 @@
-import React, { useState, useRef } from 'react';
-import { CSVReader } from 'react-papaparse';
+import React, { useState } from 'react';
+import { useCSVReader } from 'react-papaparse';
 import { Button } from 'react-bootstrap';
 
-const CSVUpload = ({ saveData, checkData, text }) => {
-    const [error, setError] = useState(null)
-    const buttonRef = useRef(null)
 
-    const handleOpenDialog = (e) => {
-        // Note that the ref is set async, so it might be null at some point 
-        if (buttonRef.current) {
-          buttonRef.current.open(e)
-        }
-      }
-
-    const onFileLoad = (data) => {
-        const newData = data.map(
-            value => {
-                if (value.data.length) {
-                    return value.data
-                }
-            }
-        )
-        const errMessage = checkData(newData)
-        setError(errMessage)
-        if (errMessage == null) {
-            saveData(newData)
-        }
-    }
+const CSVUpload = ({cleanData, checkData, saveData, text}) => {
+    const { CSVReader } = useCSVReader();
+    const [error, setError] = useState(null);
 
     return <CSVReader
-        onFileLoad={onFileLoad}
-        noDrag
-        noClick
-        ref={buttonRef}
+        onUploadAccepted={({data}) => {
+            const newData = cleanData(data);
+            const errMessage = checkData(newData);
+            setError(errMessage);
+            if (errMessage == null) {
+                saveData(newData);
+            }
+        }}
         config={{
             skipEmptyLines: true,
             transform: value => value.trim().toLowerCase(),
@@ -40,18 +23,17 @@ const CSVUpload = ({ saveData, checkData, text }) => {
         }}
     >
         {
-            ({ file }) => {
-                return <React.Fragment>
-                    <Button onClick={handleOpenDialog}>
-                        {text}
-                    </Button>
-                    <div>
-                        {error}
-                    </div>
-                </React.Fragment>
-            }
+            ({getRootProps}) => <React.Fragment>
+                <Button {...getRootProps()}>
+                    {text}
+                </Button>
+                <div>
+                    {error}
+                </div>
+            
+            </React.Fragment>
         }
-    </CSVReader>
-}
+    </CSVReader>;
+};
 
-export default CSVUpload
+export default CSVUpload;

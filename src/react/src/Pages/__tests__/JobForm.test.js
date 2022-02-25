@@ -21,11 +21,11 @@ describe('new Job Page', () => {
             }
           `}
             variables={{
-                jobId: "testId"
+                jobId: 'testId'
             }}
             render={({ error, props}) => {
                 if (props) {
-                    return <JobForm data={props} match={{location: {state: {jobId: "testId"}}}} router={router}/>;
+                    return <JobForm data={props} match={{location: {state: {jobId: 'testId'}}}} router={router}/>;
                 } else if (error) {
                     return error.message;
                 }
@@ -39,7 +39,7 @@ describe('new Job Page', () => {
         const { getAllByText } = render(<TestRenderer />);
         await waitFor(
             () => environment.mock.resolveMostRecentOperation(
-                operation => MockPayloadGenerator.generate(operation, {String() {return 'string'}})
+                operation => MockPayloadGenerator.generate(operation, {String() {return 'string';}})
             )
         );
         fireEvent.click(getAllByText('Submit')[0]);

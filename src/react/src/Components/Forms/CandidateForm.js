@@ -8,9 +8,11 @@ import initialValues from './initialValues';
 import { HiOutlineX, HiOutlinePlus } from 'react-icons/hi';
 import PageNav from './Atoms/PageNav';
 import CSVUpload from './Atoms/CSVUpload';
+import { cleanData, checkData } from '../../Utils/csvUtils';
 
 const CandidateForm = ({ handlePageChange, viterbiId }) => {
-    const { values } = useFormikContext();
+    const { values, setFieldValue } = useFormikContext();
+    const defaultData = initialValues.candidates[0];
     return (
         <React.Fragment>
             <Table>
@@ -55,6 +57,7 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                                 name={`candidates.${index}.targetBinary`}
                                                 labelOn="Yes"
                                                 labelOff="No"
+                                                value={true}
                                             />
                                         </td>
                                         {
@@ -88,6 +91,7 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                         <td className="align-top">
                                             <Button
                                                 onClick={() => remove(index)}
+                                                data-testid={`remove-candidate-button-${index}`}
                                             >
                                                 <HiOutlineX />
                                             </Button>
@@ -99,42 +103,22 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                 !viterbiId && <tr>
                                     <td>
                                         <CSVUpload
+                                            cleanData={cleanData}
+                                            checkData={checkData}
                                             saveData={data => {
+                                                setFieldValue('candidates', []);
                                                 data.forEach(
                                                     candidate => {
                                                         push({
                                                             candidateFrequency: candidate[0],
                                                             sourceDataset: candidate[1],
                                                             targetBinary: candidate[2],
-                                                            orbitPeriod: candidate[3],
-                                                            asini: candidate[4],
-                                                            orbitTp: candidate[5],
+                                                            orbitPeriod: candidate[3] || defaultData.orbitPeriod,
+                                                            asini: candidate[4] || defaultData.asini,
+                                                            orbitTp: candidate[5] || defaultData.orbitTp,
                                                         });
                                                     }
                                                 );
-                                            }}
-                                            checkData={data => {
-                                                for (var i = 0; i < data.length; i++) {
-                                                    var row = i+1;
-                                                    var candidate = data[i];
-
-                                                    if (candidate.length && candidate.length < 6) {
-                                                        return `Row ${row} doesn't have enough columns`;
-                                                    } else if (isNaN(candidate[0])){
-                                                        return `Row ${row}, column 1 must be a number`;
-                                                    } else if (!['o1', 'o2', 'o3', 'o4'].includes(candidate[1])){
-                                                        return `Row ${row}, column 2 must be in the range O1-4`;
-                                                    } else if (!(typeof candidate[2] == 'boolean')) {
-                                                        return `Row ${row}, column 3 is not boolean`;
-                                                    } else if (isNaN(candidate[3])){
-                                                        return `Row ${row}, column 4 must be a number`;
-                                                    } else if (isNaN(candidate[4])){
-                                                        return `Row ${row}, column 5 must be a number`;
-                                                    } else if (isNaN(candidate[5])){
-                                                        return `Row ${row}, column 6 must be a number`;
-                                                    }
-                                                }
-                                                return null;
                                             }}
                                             text='Upload candidates from CSV'
                                         />
@@ -142,7 +126,8 @@ const CandidateForm = ({ handlePageChange, viterbiId }) => {
                                     <td colSpan={5}/>
                                     <td>
                                         <Button
-                                            onClick={() => push(initialValues.candidates[0])}
+                                            onClick={() => push(defaultData)}
+                                            data-testid='add-candidate-button'
                                         >
                                             <HiOutlinePlus />
                                         </Button>

@@ -24,7 +24,7 @@ const Parameters = ({ candidates, followups }) => (
                                         {_.round(candidate.candidateFrequency, 2).toFixed(2)}
                                     </td>
                                     <td>
-                                        {candidate.sourceDataset, 2}
+                                        {candidate.sourceDataset.toUpperCase()}
                                     </td>
                                     {
                                         candidate.targetBinary ?
