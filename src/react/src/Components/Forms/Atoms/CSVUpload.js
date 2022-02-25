@@ -1,21 +1,15 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useCSVReader } from 'react-papaparse';
 import { Button } from 'react-bootstrap';
 
 
-const CSVUpload = ({checkData, saveData, text}) => {
+const CSVUpload = ({cleanData, checkData, saveData, text}) => {
     const { CSVReader } = useCSVReader();
     const [error, setError] = useState(null);
 
     return <CSVReader
         onUploadAccepted={({data}) => {
-            const newData = data.map(
-                value => {
-                    if (value.length) {
-                        return value;
-                    }
-                }
-            );
+            const newData = cleanData(data);
             const errMessage = checkData(newData);
             setError(errMessage);
             if (errMessage == null) {

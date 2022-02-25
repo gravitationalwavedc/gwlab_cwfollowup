@@ -1,10 +1,9 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import 'regenerator-runtime/runtime';
 import ReviewJob from '../ReviewJob';
-import { Formik, setIn } from 'formik';
+import { Formik } from 'formik';
 import initialValues from '../initialValues';
-import userEvent from '@testing-library/user-event';
 
 /* global environment */
 
