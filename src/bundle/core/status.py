@@ -3,6 +3,8 @@ import os
 from db import get_job_by_id, update_job, delete_job
 from scheduler.slurm import slurm_status, SLURM_STATUS
 from scheduler.status import JobStatus
+
+
 def get_submit_status(job):
     if 'submit_id' in job:
         _status, info = slurm_status(job['submit_id'])
@@ -34,6 +36,8 @@ def get_submit_status(job):
         'info': "Completed"
     }
     return result
+
+
 def status(details, job_data):
     # Get the job
     job = get_job_by_id(details['scheduler_id'])

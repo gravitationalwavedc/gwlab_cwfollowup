@@ -15,3 +15,4 @@ src/react/dist
 db.lock
 db.pickle
 __pycache__/
+env.sh

@@ -1,12 +1,11 @@
 import json
-import math
 import os
 from pathlib import Path
 
 from core.misc import working_directory
 from db import get_unique_job_id, update_job
 from scheduler.slurm import slurm_submit
-from settings import scheduler_env
+
 
 def submit_template(submit_dir, job_name, followups):
     lines = [
@@ -17,13 +16,14 @@ def submit_template(submit_dir, job_name, followups):
     ]
 
     for i, followup in enumerate(followups):
-        jid=f'jid{i}'
+        jid = f'jid{i}'
         lines.append(
             f"""{jid}=($(sbatch {submit_dir}/{job_name}_{followup}.sh))
 echo "{jid} ${{{jid}[-1]}}" >> {submit_dir}/slurm_ids"""
         )
 
     return '\n\n'.join(lines)
+
 
 def generic_followup_script_template(submit_dir, followup_results_dir, job_name, followup):
     return f"""#!/bin/bash
@@ -43,6 +43,7 @@ module load gcc/6.4.0 python/3.7.4
 . /fred/oz986/cwfollowup/lalapps/v7.0.0/etc/lal-user-env.sh
 
 python /fred/oz986/cwfollowup/{followup}/{followup}.py {submit_dir}/{job_name}_{followup}.json"""
+
 
 def generic_followup_json(followup_results_dir, candidates, followup):
     return {
