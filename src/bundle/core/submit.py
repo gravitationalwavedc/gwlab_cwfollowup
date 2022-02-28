@@ -52,6 +52,7 @@ def generic_followup_json(followup_results_dir, candidates, followup):
         'script_path': f'/fred/oz986/cwfollowup/{followup}'
     }
 
+
 def submit(details, input_params):
     print("Submitting new job...")
 
@@ -118,4 +119,3 @@ def submit(details, input_params):
 
     # return the job id
     return job['job_id']
-
