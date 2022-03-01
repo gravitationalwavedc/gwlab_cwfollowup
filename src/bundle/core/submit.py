@@ -37,9 +37,8 @@ def generic_followup_script_template(submit_dir, followup_results_dir, job_name,
 #SBATCH --output={followup_results_dir}/{job_name}_{followup}.out
 #SBATCH --error={followup_results_dir}/{job_name}_{followup}.err
 
-module load gcc/6.4.0 python/3.7.4
 . /fred/oz986/cwfollowup/lalapps/module_env.sh
-. /fred/oz986/cwfollowup/bundle/{followup}/venv/bin/activate
+. /fred/oz986/cwfollowup/{followup}/venv/bin/activate
 . /fred/oz986/cwfollowup/lalapps/v7.0.0/etc/lal-user-env.sh
 
 python /fred/oz986/cwfollowup/{followup}/{followup}.py {submit_dir}/{job_name}_{followup}.json"""
