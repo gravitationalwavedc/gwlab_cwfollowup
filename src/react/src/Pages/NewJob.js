@@ -5,16 +5,12 @@ import ViterbiJobLists from '../Components/ViterbiJobLists';
 import NewJobBanner from '../Components/NewJobBanner';
 
 
-const NewJob = ({ match, router, ...props}) => {
-    return (
-        <React.Fragment>
-            <NewJobBanner match={match} router={router} />
-            <Container>
-                <ViterbiJobLists match={match} router={router} {...props}/>
-            </Container>
-        </React.Fragment>
-    )
-}
+const NewJob = ({ match, router, ...props}) => (
+    <React.Fragment>
+        <NewJobBanner match={match} router={router} />
+        <ViterbiJobLists match={match} router={router} {...props}/>
+    </React.Fragment>
+);
 
 export default createFragmentContainer(NewJob,
     {

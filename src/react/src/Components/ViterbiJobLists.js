@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import {graphql, createFragmentContainer} from 'react-relay';
-import {harnessApi} from '../index';
-import { Container, Col, Row, Tab, Nav, Button } from 'react-bootstrap';
 import PublicViterbiJobsList from '../Components/PublicViterbiJobsList';
 import UserViterbiJobsList from '../Components/UserViterbiJobsList';
 
 const ViterbiJobLists = (props) => {
-    const [publicJobs, setPublicJobs] = useState(true)
+    const [publicJobs, setPublicJobs] = useState(true);
 
     return (
-        <Container>
+        <React.Fragment>
             {
                 publicJobs ? <PublicViterbiJobsList {...props} handleSwitch={() => setPublicJobs(false)}/>
-                :  <UserViterbiJobsList {...props} handleSwitch={() => setPublicJobs(true)}/>
+                    :  <UserViterbiJobsList {...props} handleSwitch={() => setPublicJobs(true)}/>
             }
-        </Container>
-    )
-}
+        </React.Fragment>
+    );
+};
 
 export default createFragmentContainer(ViterbiJobLists,
     {
