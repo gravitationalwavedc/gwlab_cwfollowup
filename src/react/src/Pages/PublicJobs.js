@@ -46,7 +46,7 @@ const PublicJobs = ({data, match, router, relay}) => {
             <HomeBanner match={match} router={router} />
             <Container >
                 <h4 className="pt-5 pt-md-5 mb-0">
-                    Experiments
+                    Followups
                 </h4>
                 <Form>
                     <Form.Row>
@@ -97,7 +97,7 @@ const PublicJobs = ({data, match, router, relay}) => {
                                 match={match} 
                                 router={router} 
                                 className="mr-1">
-                                    View my experiments
+                                    View my followups
                             </Link>
                         </Col>
                     </Form.Row>
@@ -119,7 +119,7 @@ const PublicJobs = ({data, match, router, relay}) => {
                 </Row>
                 <Navbar fixed="bottom" className="justify-content-center d-sm-none top-shadow">
                     <Link as={Button} to='/cwfollowup/job-form/' exact match={match} router={router}>
-                                New experiment
+                                New followup
                     </Link>
                 </Navbar>
             </Container>

@@ -1,20 +1,26 @@
 import {setHarnessApi, harnessApi} from '../index';
 import {createMockEnvironment} from 'relay-test-utils';
-import {expect} from '@jest/globals';
 
-const newApi = {
-    getEnvironment: () => createMockEnvironment()
-};
 
-beforeAll(() => setHarnessApi(null));
+describe('harnessApi', () => {
+    const newApi = {
+        getEnvironment: () => createMockEnvironment()
+    };
 
-test('setHarnessApi works correctly', () => {
-    // Check that harnessApi is initially null
-    expect(harnessApi).toBe(null);
+    it('can be set by setHarnessApi', () => {
+        expect.hasAssertions();
 
-    // Set the harness api to our test api
-    setHarnessApi(newApi);
+        setHarnessApi({});
 
-    // Confirm that the harnessApi is now correct
-    expect(harnessApi).toBe(newApi);
+        // Check that harnessApi has only defaults
+        expect(harnessApi).toHaveProperty('getSecondaryMenu');
+        expect(harnessApi).not.toMatchObject(newApi);
+        
+        // Set the harness api to our test api
+        setHarnessApi(newApi);
+        
+        // Confirm that the harnessApi is now correct
+        expect(harnessApi).toMatchObject(newApi);
+
+    });
 });
