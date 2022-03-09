@@ -7,12 +7,12 @@ const ViterbiJobLists = (props) => {
     const [publicJobs, setPublicJobs] = useState(true);
 
     return (
-        <React.Fragment>
+        <>
             {
                 publicJobs ? <PublicViterbiJobsList {...props} handleSwitch={() => setPublicJobs(false)}/>
                     :  <UserViterbiJobsList {...props} handleSwitch={() => setPublicJobs(true)}/>
             }
-        </React.Fragment>
+        </>
     );
 };
 
