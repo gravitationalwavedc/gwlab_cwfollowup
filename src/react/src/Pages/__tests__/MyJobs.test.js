@@ -3,7 +3,7 @@ import { MockPayloadGenerator } from 'relay-test-utils';
 import { QueryRenderer, graphql } from 'react-relay';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import MyJobs from '../MyJobs';
-import 'regenerator-runtime/runtime'
+import 'regenerator-runtime/runtime';
 
 /* global environment, router */
 
@@ -58,7 +58,7 @@ describe('my Jobs Page', () => {
             operation,
             MockPayloadGenerator.generate(operation, mockReturn)
         );
-        expect(getByText('My experiments')).toBeInTheDocument();
+        expect(getByText('My followups')).toBeInTheDocument();
     });
 
     it('calls refetchConnection when the search field is updated', async () => {

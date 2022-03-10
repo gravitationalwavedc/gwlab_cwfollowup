@@ -34,7 +34,7 @@ services:
     build:
       dockerfile: ./docker/gwlab_cwfollowup_static.Dockerfile
       context: .
-    image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_static:0.3
+    image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_static:0.4
     container_name: gwlab_cwfollowup_static
     ports:
       - "8000"

@@ -19,7 +19,7 @@ const HomeBanner = ({match, router}) =>
                 <Row>
                     <Col>
                         <Link as={Button} to='/cwfollowup/new-job/' exact match={match} router={router}>
-                                New experiment
+                            New followup
                         </Link>
                     </Col>
                 </Row>

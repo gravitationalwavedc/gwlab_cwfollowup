@@ -1,20 +1,15 @@
 import React from 'react';
 import {graphql, createFragmentContainer} from 'react-relay';
-import { Container } from 'react-bootstrap';
 import ViterbiJobLists from '../Components/ViterbiJobLists';
 import NewJobBanner from '../Components/NewJobBanner';
 
 
-const NewJob = ({ match, router, ...props}) => {
-    return (
-        <React.Fragment>
-            <NewJobBanner match={match} router={router} />
-            <Container>
-                <ViterbiJobLists match={match} router={router} {...props}/>
-            </Container>
-        </React.Fragment>
-    )
-}
+const NewJob = ({ match, router, ...props}) => (
+    <>
+        <NewJobBanner match={match} router={router} />
+        <ViterbiJobLists match={match} router={router} {...props}/>
+    </>
+);
 
 export default createFragmentContainer(NewJob,
     {
