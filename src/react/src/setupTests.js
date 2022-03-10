@@ -1,19 +1,7 @@
-import React, {
-    useState,
-    useEffect,
-    useContext,
-    useReducer,
-    useCallback,
-    useMemo,
-    useRef,
-    useImperativeHandle,
-    useLayoutEffect,
-    useDebugValue
-} from 'react';
+import React from 'react';
 import { setHarnessApi } from './index';
-import { render } from '@testing-library/react';
 import { createMockEnvironment } from 'relay-test-utils';
-import { QueryRenderer } from 'react-relay';
+import { RouterContext } from 'found';
 
 // This ignores the jest global variable from eslint errors.
 /* global global */
@@ -30,25 +18,6 @@ setHarnessApi({
     }
 });
 
-global.queryRendererSetup = (inputQuery, componentToRender) => {
-    render(
-        <QueryRenderer
-            environment={environment}
-            query={inputQuery}
-            variables={{}}
-            render={({ error, props }) => {
-                if (props) {
-                    return componentToRender(props);
-                } else if (error) {
-                    return error.message;
-                }
-                return 'Loading...';
-            }}
-        />
-    );
-    return environment;
-};
-
 global.router = {
     push: jest.fn(),
     replace: jest.fn(),
@@ -63,7 +32,14 @@ global.router = {
         format: jest.fn()
     },
     addTransitionHook: jest.fn(),
-    addNavigationListener: jest.fn()
+    addNavigationListener: jest.fn(),
+};
+
+global.TestRouter = ({children}) => {
+    const routerContext = {router: router, match: {}};
+    return <RouterContext.Provider value={routerContext}>
+        {children}
+    </RouterContext.Provider>;
 };
 
 global.environment = environment;
