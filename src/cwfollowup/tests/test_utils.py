@@ -16,147 +16,147 @@ def silence_errors(func):
 VITERBI_FILE_LIST = [
     {
         "path": "/archive.tar.gz",
-        "downloadId": "3413abcd-4222-4812-9774-eb76826ae0b4"
+        "downloadToken": "/archive.tar.gz-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-0",
-        "downloadId": "4e877e22-fd06-4509-bf32-be9af1f41496"
+        "downloadToken": "/atoms/188-0/atoms-0-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-1",
-        "downloadId": "de4b7697-a251-4797-a741-04b21568843b"
+        "downloadToken": "/atoms/188-0/atoms-1-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-10",
-        "downloadId": "19b7044a-3722-40c4-a479-20697e8dd00f"
+        "downloadToken": "/atoms/188-0/atoms-10-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-11",
-        "downloadId": "89a6d77c-8bea-4087-892b-01938989fa17"
+        "downloadToken": "/atoms/188-0/atoms-11-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-12",
-        "downloadId": "45445207-a164-4fcf-ab1b-2395051f351f"
+        "downloadToken": "/atoms/188-0/atoms-12-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-13",
-        "downloadId": "f2fb8483-cb64-49a7-b9a3-cc6ee560139c"
+        "downloadToken": "/atoms/188-0/atoms-13-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-14",
-        "downloadId": "2fd0c891-3d94-48d8-8070-b61df7db32c7"
+        "downloadToken": "/atoms/188-0/atoms-14-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-15",
-        "downloadId": "3113ff50-309d-4196-8c8c-d05bad68e482"
+        "downloadToken": "/atoms/188-0/atoms-15-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-16",
-        "downloadId": "82ff82ef-e047-4b86-8676-8277cf56e27c"
+        "downloadToken": "/atoms/188-0/atoms-16-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-17",
-        "downloadId": "b8edb9d6-bdf7-4c71-8fc3-408a5fc3d9b3"
+        "downloadToken": "/atoms/188-0/atoms-17-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-18",
-        "downloadId": "a7b6da79-118f-43f2-ab88-42a6926ce1ea"
+        "downloadToken": "/atoms/188-0/atoms-18-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-2",
-        "downloadId": "bec229cf-70de-4c4a-81f6-b11a93ea76ea"
+        "downloadToken": "/atoms/188-0/atoms-2-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-3",
-        "downloadId": "e49bb4e0-9009-4485-9990-de6be4a3c0ab"
+        "downloadToken": "/atoms/188-0/atoms-3-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-4",
-        "downloadId": "ff5b90d5-00e4-4d38-be52-c99332313f4a"
+        "downloadToken": "/atoms/188-0/atoms-4-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-5",
-        "downloadId": "50905dfa-c1f2-4026-b32c-be75fb91916d"
+        "downloadToken": "/atoms/188-0/atoms-5-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-6",
-        "downloadId": "07df5204-9763-4ad4-bc5c-b7040451b697"
+        "downloadToken": "/atoms/188-0/atoms-6-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-7",
-        "downloadId": "3f4f1809-047f-4a0c-983b-01fbb90d9412"
+        "downloadToken": "/atoms/188-0/atoms-7-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-8",
-        "downloadId": "06bce577-a8a1-4347-b85a-9a8b1ccac363"
+        "downloadToken": "/atoms/188-0/atoms-8-test-token"
     },
     {
         "path": "/atoms/188-0/atoms-9",
-        "downloadId": "f2659330-d7f5-49b2-9678-513ca3ed188b"
+        "downloadToken": "/atoms/188-0/atoms-9-test-token"
     },
     {
         "path": "/atoms/188-0/sfts_used.txt",
-        "downloadId": "fff7adf2-f11f-4c62-9217-08c890e26cf3"
+        "downloadToken": "/atoms/188-0/sfts_used.txt-test-token"
     },
     {
         "path": "/atoms/LewisTest1_atoms.err",
-        "downloadId": "35729874-4127-424a-8dcb-c5a2668f4305"
+        "downloadToken": "/atoms/LewisTest1_atoms.err-test-token"
     },
     {
         "path": "/atoms/LewisTest1_atoms.out",
-        "downloadId": "7cd51fbe-57c2-42f1-818e-e2f90df0dd65"
+        "downloadToken": "/atoms/LewisTest1_atoms.out-test-token"
     },
     {
         "path": "/LewisTest1_atoms.ini",
-        "downloadId": "acdf635e-1f73-4431-bbb0-10b85d1731c4"
+        "downloadToken": "/LewisTest1_atoms.ini-test-token"
     },
     {
         "path": "/LewisTest1_viterbi.ini",
-        "downloadId": "a5ff0695-3a0d-4906-beaa-1e5f3c04620f"
+        "downloadToken": "/LewisTest1_viterbi.ini-test-token"
     },
     {
         "path": "/submit/LewisTest1_atoms.sh",
-        "downloadId": "8db49148-c4e4-4b75-9a96-78c19105c3e5"
+        "downloadToken": "/submit/LewisTest1_atoms.sh-test-token"
     },
     {
         "path": "/submit/LewisTest1_master_slurm.err",
-        "downloadId": "28b8d936-7214-4a49-a0bc-5a7b4f14429d"
+        "downloadToken": "/submit/LewisTest1_master_slurm.err-test-token"
     },
     {
         "path": "/submit/LewisTest1_master_slurm.out",
-        "downloadId": "d506c4d1-40b9-4f7e-bb03-4076adf72503"
+        "downloadToken": "/submit/LewisTest1_master_slurm.out-test-token"
     },
     {
         "path": "/submit/LewisTest1_master_slurm.sh",
-        "downloadId": "aee40fc5-3902-4f85-92a8-f1ec4d9b9749"
+        "downloadToken": "/submit/LewisTest1_master_slurm.sh-test-token"
     },
     {
         "path": "/submit/LewisTest1_viterbi.sh",
-        "downloadId": "b019335c-b3e5-4d3d-8fbb-87277cc631e8"
+        "downloadToken": "/submit/LewisTest1_viterbi.sh-test-token"
     },
     {
         "path": "/submit/slurm_ids",
-        "downloadId": "45042d89-5b02-4a84-84bc-dec3bd72548c"
+        "downloadToken": "/submit/slurm_ids-test-token"
     },
     {
         "path": "/viterbi/LewisTest1_viterbi.err",
-        "downloadId": "139c1998-669c-4118-92af-d0643c8bd22b"
+        "downloadToken": "/viterbi/LewisTest1_viterbi.err-test-token"
     },
     {
         "path": "/viterbi/LewisTest1_viterbi.out",
-        "downloadId": "a1f5587b-5d28-40bb-b64c-371ec84c69df"
+        "downloadToken": "/viterbi/LewisTest1_viterbi.out-test-token"
     },
     {
         "path": "/viterbi/results_a0_phase_loglikes_scores.dat",
-        "downloadId": "71e25981-a095-4858-b6ae-079501adc149"
+        "downloadToken": "/viterbi/results_a0_phase_loglikes_scores.dat-test-token"
     },
     {
         "path": "/viterbi/results_path.dat",
-        "downloadId": "c3451b9b-c7d8-4250-8f4f-8502fe141240"
+        "downloadToken": "/viterbi/results_path.dat-test-token"
     },
     {
         "path": "/viterbi/results_scores.dat",
-        "downloadId": "f8ee3fa2-2d9a-47ca-b191-bb07eb022609"
+        "downloadToken": "/viterbi/results_scores.dat-test-token"
     }
 ]
 
