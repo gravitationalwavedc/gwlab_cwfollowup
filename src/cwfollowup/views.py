@@ -72,7 +72,7 @@ def get_candidate_file_data(info, job_id):
     candidate_file = next(filter(lambda f: 'results_a0_phase_loglikes_scores.dat' in f['path'], file_list))
     candidate_file_id = get_id_from_token(info, job_id, candidate_file['downloadToken'])
     file_url = settings.GWCLOUD_JOB_CONTROLLER_API_URL + '/file/?fileId=' + candidate_file_id
-    return requests.get(file_url)
+    return requests.get(file_url).text
 
 
 def get_min_start_time(info, job_id):
@@ -110,7 +110,7 @@ def get_viterbi_candidates(info, job_id):
     source_dataset = get_source_dataset(info, job_id)
     candidate_file_data = get_candidate_file_data(info, job_id)
     candidates = []
-    for candidate_data in candidate_file_data.text.strip().split('\n'):
+    for candidate_data in candidate_file_data.strip().split('\n'):
         candidate = candidate_data.split()
         candidates.append({
             'orbit_period': float(candidate[0]),

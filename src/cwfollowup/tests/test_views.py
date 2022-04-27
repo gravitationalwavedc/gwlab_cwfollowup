@@ -115,12 +115,12 @@ class TestViterbiSchemaViews(CwFollowupTestCase):
             self.job_id,
             "/viterbi/results_a0_phase_loglikes_scores.dat-test-token"
         )
-        self.assertEqual(candidate_file_data.text, VITERBI_CANDIDATE_DATA)
+        self.assertEqual(candidate_file_data, VITERBI_CANDIDATE_DATA)
 
     @mock.patch('cwfollowup.views.get_source_dataset')
     @mock.patch('cwfollowup.views.get_candidate_file_data')
     def test_obtain_viterbi_candidates(self, candidate_data_mock, source_dataset_mock):
-        candidate_data_mock.return_value.text = VITERBI_CANDIDATE_DATA
+        candidate_data_mock.return_value = VITERBI_CANDIDATE_DATA
         source_dataset_mock.return_value = 'o2'
         candidates = get_viterbi_candidates(self.mock_info, self.job_id)
         expected = [
