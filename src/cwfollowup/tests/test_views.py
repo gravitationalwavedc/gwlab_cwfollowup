@@ -1,5 +1,7 @@
 import json
+import responses
 from unittest import mock
+
 from django.conf import settings
 
 from cwfollowup.views import perform_viterbi_query, get_min_start_time, get_source_dataset, get_viterbi_candidates, \
@@ -15,16 +17,25 @@ class TestViterbiSchemaViews(CwFollowupTestCase):
         self.mock_info.context.method = None
         self.job_id = 1
 
-    @mock.patch('cwfollowup.views.requests.request')
-    def test_perform_viterbi_query(self, request_mock):
-        request_mock.return_value.content = json.dumps({'data': 'return_data'})
+        self.responses = responses.RequestsMock()
+        self.responses.start()
+
+        self.addCleanup(self.responses.stop)
+        self.addCleanup(self.responses.reset)
+
+    def test_perform_viterbi_query(self):
+        self.responses.add(
+            responses.POST,
+            settings.GWLAB_VITERBI_GRAPHQL_URL,
+            body=json.dumps({'data': 'return_data'}),
+            status=200
+        )
         return_data = perform_viterbi_query(
             query='query',
             variables={'variable': 1},
             headers=[],
             method='POST'
         )
-        request_mock.assert_called()
         self.assertEqual(return_data, 'return_data')
 
     @mock.patch('cwfollowup.views.perform_viterbi_query')
@@ -86,22 +97,23 @@ class TestViterbiSchemaViews(CwFollowupTestCase):
         min_start_time_mock.return_value = 1269388818 + 1
         self.assertEqual(get_source_dataset(self.mock_info, self.job_id), None)
 
-    @mock.patch('cwfollowup.views.requests.get')
     @mock.patch('cwfollowup.views.get_id_from_token')
     @mock.patch('cwfollowup.views.get_viterbi_result_files')
-    def test_get_candidate_file_data(self, file_list_mock, candidate_id_mock, candidate_data_mock):
+    def test_get_candidate_file_data(self, file_list_mock, candidate_id_mock):
         file_list_mock.return_value = VITERBI_FILE_LIST
         candidate_id_mock.return_value = 'mock-download-id'
-        candidate_data_mock.return_value.text = VITERBI_CANDIDATE_DATA
+        self.responses.add(
+            responses.GET,
+            settings.GWCLOUD_JOB_CONTROLLER_API_URL + '/file/?fileId=mock-download-id',
+            body=VITERBI_CANDIDATE_DATA,
+            status=200
+        )
 
         candidate_file_data = get_candidate_file_data(self.mock_info, self.job_id)
         candidate_id_mock.assert_called_once_with(
             self.mock_info,
             self.job_id,
             "/viterbi/results_a0_phase_loglikes_scores.dat-test-token"
-        )
-        candidate_data_mock.assert_called_once_with(
-            settings.GWCLOUD_JOB_CONTROLLER_API_URL + '/file/?fileId=' + candidate_id_mock.return_value
         )
         self.assertEqual(candidate_file_data.text, VITERBI_CANDIDATE_DATA)
 
