@@ -5,7 +5,7 @@ from unittest import mock
 from django.conf import settings
 
 from cwfollowup.views import perform_viterbi_query, get_min_start_time, get_source_dataset, get_viterbi_candidates, \
-    get_viterbi_result_files, get_candidate_file_data
+    get_viterbi_result_files, get_candidate_file_data, get_id_from_token
 from cwfollowup.tests.test_utils import VITERBI_FILE_LIST, VITERBI_CANDIDATE_DATA
 from cwfollowup.tests.testcases import CwFollowupTestCase
 
@@ -37,6 +37,16 @@ class TestViterbiSchemaViews(CwFollowupTestCase):
             method='POST'
         )
         self.assertEqual(return_data, 'return_data')
+
+    @mock.patch('cwfollowup.views.perform_viterbi_query')
+    def test_get_id_from_token(self, perform_viterbi_query_mock):
+        test_id = 'test_id'
+        perform_viterbi_query_mock.return_value = {
+            'generateFileDownloadIds': {
+                'result': [test_id]
+            }
+        }
+        self.assertEqual(get_id_from_token(self.mock_info, self.job_id, 'mock-token'), test_id)
 
     @mock.patch('cwfollowup.views.perform_viterbi_query')
     def test_get_viterbi_result_files(self, result_files_mock):
