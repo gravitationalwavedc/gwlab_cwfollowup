@@ -45,14 +45,6 @@ describe('view job page', () => {
                     number:'400',
                     date:'2020-10-05 04:49:58 UTC'
                 },
-                candidates: {
-                    candidateFrequency: 100,
-                    sourceDataset: 'o3',
-                    targetBinary: true,
-                    asini: 200,
-                    orbitTp: 300,
-                    orbitPeriod: 400
-                },
                 followups: [
                     'lines'
                 ],

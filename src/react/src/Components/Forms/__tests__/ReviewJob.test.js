@@ -5,8 +5,6 @@ import ReviewJob from '../ReviewJob';
 import { Formik } from 'formik';
 import initialValues from '../initialValues';
 
-/* global environment */
-
 describe('the review job component', () => {
     const mockPageChange = jest.fn();
 

@@ -16,7 +16,7 @@ const ViewJob = (props) => {
         setShowNotification(true);
     };
 
-    const { id, start, lastUpdated, userId, candidates, followups } = props.data.cwfollowupJob;
+    const { id, start, lastUpdated, userId, followups } = props.data.cwfollowupJob;
 
     const updated = moment.utc(lastUpdated, 'YYYY-MM-DD HH:mm:ss UTC').local().format('llll');
 
@@ -74,7 +74,7 @@ const ViewJob = (props) => {
                     <Col md={8}>
                         <Tab.Content>
                             <Tab.Pane eventKey="parameters">
-                                <Parameters candidates={candidates} followups={followups}/>
+                                <Parameters candidates={{}} followups={followups}/>
                             </Tab.Pane>
                             <Tab.Pane eventKey="results">
                                 <div>Placeholder</div>
@@ -108,14 +108,6 @@ export default createFragmentContainer(ViewJob,
                         name
                         number
                         date
-                    }
-                    candidates {
-                        candidateFrequency
-                        sourceDataset
-                        targetBinary
-                        asini
-                        orbitTp
-                        orbitPeriod
                     }
                     followups
                 }
