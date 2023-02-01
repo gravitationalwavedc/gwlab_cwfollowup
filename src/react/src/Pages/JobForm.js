@@ -7,7 +7,7 @@ import FollowupsForm from '../Components/Forms/FollowupsForm';
 import ReviewJob from '../Components/Forms/ReviewJob';
 import initialValues from '../Components/Forms/initialValues';
 import validationSchema from '../Components/Forms/validationSchema';
-import { createFragmentContainer, graphql, commitMutation } from 'react-relay';
+import { graphql, commitMutation } from 'react-relay';
 import _ from 'lodash';
 import { harnessApi } from '../index';
 
@@ -23,21 +23,9 @@ const submitMutation = graphql`
 
 
 const JobForm = ({ data, match, router }) => {
-    const viterbiId = match.location.state && match.location.state.jobId;
-    const jobData = data && data.viterbi.viterbiJob;
-    const candidateData = data && data.viterbiJobCandidates;
-
-    if (jobData) {
-        initialValues.name = `Followup-of-${jobData.start.name}`;
-        initialValues.description = `Followup job of ${jobData.start.name}. Original description: ${jobData.start.description}`;
-    }
-    if (candidateData) {
-        initialValues.candidates = candidateData;
-    }
-
     const [key, setKey] = useState('candidates');
 
-    const handleJobSubmission = (values, viterbiId) => {
+    const handleJobSubmission = (values) => {
         // The mutation requires all number values to be strings.
         const json = JSON.stringify(values);
         values = JSON.parse(json, (key, val) => (
@@ -48,9 +36,6 @@ const JobForm = ({ data, match, router }) => {
             input: {
                 name: values.name,
                 description: values.description,
-                isUploaded: viterbiId ? false : true,
-                viterbiId: viterbiId,
-                candidates: values.candidates,
                 followups: values.followupChoices,
             }
         };
@@ -73,7 +58,7 @@ const JobForm = ({ data, match, router }) => {
         <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={(values) => handleJobSubmission(values, viterbiId)}
+            onSubmit={(values) => handleJobSubmission(values)}
         >
             <Container fluid>
                 <Form>
@@ -110,7 +95,7 @@ const JobForm = ({ data, match, router }) => {
                             <Col md={8}>
                                 <Tab.Content>
                                     <Tab.Pane eventKey="candidates">
-                                        <CandidateForm handlePageChange={setKey} viterbiId={viterbiId}/>
+                                        <CandidateForm handlePageChange={setKey}/>
                                     </Tab.Pane>
                                     <Tab.Pane data-testid="followupsPane" eventKey="followups">
                                         <FollowupsForm handlePageChange={setKey}/>
@@ -128,30 +113,4 @@ const JobForm = ({ data, match, router }) => {
     );
 };
 
-export default createFragmentContainer(JobForm,
-    {
-        data: graphql`
-            fragment JobForm_data on Query @argumentDefinitions(
-                jobId: {type: "ID!"}
-            ) {
-                viterbi {
-                    viterbiJob (id: $jobId) {
-                        id
-                        start {
-                            name
-                            description
-                        }
-                    }
-                }
-                viterbiJobCandidates (jobId: $jobId) {
-                    orbitPeriod
-                    asini
-                    orbitTp
-                    targetBinary
-                    candidateFrequency
-                    sourceDataset
-                }
-            }
-        `
-    }
-);
+export default JobForm;

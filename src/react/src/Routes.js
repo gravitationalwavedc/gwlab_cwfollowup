@@ -44,50 +44,14 @@ function getRoutes() {
             <Route
                 path="new-job"
                 Component={NewJob}
-                query={graphql`
-                    query Routes_NewJob_Query (
-                    $count: Int!,
-                    $cursor: String,
-                    $search: String,
-                    $timeRange: String,
-                    $orderBy: String
-                    ) {
-                        ...NewJob_data
-                    }
-                `}
-                prepareVariables={() => ({
-                    timeRange: 'all',
-                    count: 100
-                })}
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 render={handleRender}/>
             <Route
                 path="new-job/job-form/"
                 Component={JobForm}
-                query={graphql`
-                    query Routes_JobForm_Query ($jobId: ID!){
-                        ...JobForm_data @arguments(jobId: $jobId)
-                    }
-                `}
-                prepareVariables={(params, {location}) => ({
-                    jobId: location.state && location.state.jobId ? location.state.jobId : ''
-                })}
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 render={handleRender}
             />
-            {/* <Route
-                path="job-form/duplicate/"
-                query={graphql`
-                    query Routes_JobForm_Query ($jobId: ID!){
-                      ...DuplicateJobForm_data @arguments(jobId: $jobId)
-                    }
-                `}
-                prepareVariables={(params, {location}) => ({
-                    jobId: location.state && location.state.jobId ? location.state.jobId : ''
-                })}
-                environment={harnessApi.getEnvironment('cwfollowup')}
-                Component={DuplicateJobForm}
-                render={handleRender}/> */}
             <Route
                 path="job-list"
                 query={graphql`

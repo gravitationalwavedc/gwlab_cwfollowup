@@ -9,39 +9,34 @@ import 'regenerator-runtime/runtime';
 
 describe('new Job Page', () => {
 
-    const TestRenderer = () => (
-        <QueryRenderer
-            environment={environment}
-            query={graphql`
-            query JobFormTestQuery (
-              $jobId: ID!
-            )
-            @relay_test_operation {
-                ...JobForm_data @arguments(jobId: $jobId)
-            }
-          `}
-            variables={{
-                jobId: 'testId'
-            }}
-            render={({ error, props}) => {
-                if (props) {
-                    return <JobForm data={props} match={{location: {state: {jobId: 'testId'}}}} router={router}/>;
-                } else if (error) {
-                    return error.message;
-                }
-                return 'Loading...';
-            }}
-        />
-    );
+    // const TestRenderer = () => (
+    //     <QueryRenderer
+    //         environment={environment}
+    //         query={graphql`
+    //         query JobFormTestQuery (
+    //           $jobId: ID!
+    //         )
+    //         @relay_test_operation {
+    //             ...JobForm_data @arguments(jobId: $jobId)
+    //         }
+    //       `}
+    //         variables={{
+    //             jobId: 'testId'
+    //         }}
+    //         render={({ error, props}) => {
+    //             if (props) {
+    //                 return <JobForm data={props} match={{location: {state: {jobId: 'testId'}}}} router={router}/>;
+    //             } else if (error) {
+    //                 return error.message;
+    //             }
+    //             return 'Loading...';
+    //         }}
+    //     />
+    // );
 
     it('should send a mutation when the form is submitted', async () => {
         expect.hasAssertions();
-        const { getAllByText } = render(<TestRenderer />);
-        await waitFor(
-            () => environment.mock.resolveMostRecentOperation(
-                operation => MockPayloadGenerator.generate(operation, {String() {return 'string';}})
-            )
-        );
+        const { getAllByText } = render(<JobForm match={{}} router={router}/>);
         fireEvent.click(getAllByText('Submit')[0]);
         await waitFor(
             () => environment.mock.resolveMostRecentOperation(
@@ -53,12 +48,7 @@ describe('new Job Page', () => {
 
     it('should navigate between tabs', async () => {
         expect.hasAssertions();
-        const {  getByTestId, getAllByText } = render(<TestRenderer />);
-        await waitFor(
-            () => environment.mock.resolveMostRecentOperation(
-                operation => MockPayloadGenerator.generate(operation)
-            )
-        );
+        const {  getByTestId, getAllByText } = render(<JobForm match={{}} router={router}/>);
         const followupsPane = getByTestId('followupsPane');
         expect(followupsPane).toHaveAttribute('aria-hidden', 'true');
         const followupsNavButton = getAllByText('Followups')[1];
