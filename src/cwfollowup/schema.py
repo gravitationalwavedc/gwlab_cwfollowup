@@ -8,7 +8,7 @@ from graphql import GraphQLError
 from graphql_jwt.decorators import login_required
 from graphql_relay.node.node import from_global_id, to_global_id
 
-from .types import CandidateInputType, OutputStartType, JobStatusType, CandidateType
+from .types import OutputStartType, JobStatusType
 from .views import create_followup_job
 from .status import JobStatus
 from .models import CWFollowupJob, FileDownloadToken
@@ -74,11 +74,7 @@ class CWFollowupJobNode(DjangoObjectType):
     last_updated = graphene.String()
     start = graphene.Field(OutputStartType)
     job_status = graphene.Field(JobStatusType)
-    candidates = graphene.List(CandidateType)
     followups = graphene.List(graphene.String)
-
-    def resolve_candidates(parent, info):
-        return parent.cw_job.candidates.all()
 
     def resolve_followups(parent, info):
         return parent.followups.values_list('followup', flat=True)
@@ -236,9 +232,7 @@ class CWFollowupJobMutation(relay.ClientIDMutation):
     class Input:
         name = graphene.String()
         description = graphene.String()
-        is_uploaded = graphene.Boolean()
-        viterbi_id = graphene.ID(required=False)
-        candidates = graphene.List(CandidateInputType)
+        candidate_group_id = graphene.Int()
         followups = graphene.List(graphene.String)
 
     result = graphene.Field(CWFollowupJobCreationResult)
