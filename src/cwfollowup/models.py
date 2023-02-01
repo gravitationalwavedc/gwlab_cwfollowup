@@ -11,47 +11,7 @@ from cwfollowup.utils.jobs.request_job_status import request_job_status
 from .variables import cwfollowup_parameters
 
 
-class CWJob(models.Model):
-    user_id = models.IntegerField()
-    creation_time = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now_add=True)
-
-    is_uploaded = models.BooleanField(default=False)
-    viterbi_id = models.CharField(max_length=255, null=True)
-
-    def save(self, *args, **kwargs):
-        if (self.is_uploaded and self.viterbi_id):
-            raise Exception("You cannot mark this CWJob as uploaded while providing a Viterbi job ID")
-        if (not self.is_uploaded and not self.viterbi_id):
-            raise Exception("You cannot mark this CWJob as not uploaded without providing a Viterbi Job ID")
-        super().save(*args, **kwargs)
-
-
-# Candidates returned from a different continuous wave search
-class CWJobCandidate(models.Model):
-    job = models.ForeignKey(CWJob, related_name='candidates', on_delete=models.CASCADE)
-    source_dataset = models.CharField(
-        max_length=2,
-        choices=cwfollowup_parameters.SOURCE_DATASETS,
-        default=cwfollowup_parameters.O1[0],
-    )
-    candidate_frequency = models.FloatField()
-    target_binary = models.BooleanField(default=True)
-    orbit_tp = models.FloatField(null=True)
-    asini = models.FloatField(null=True)
-    orbit_period = models.FloatField(null=True)
-
-    def save(self, *args, **kwargs):
-        if not self.target_binary:
-            self.orbit_tp = None
-            self.asini = None
-            self.orbit_period = None
-
-        super().save(*args, **kwargs)
-
-
 # Model to hold all the information for a followup job
-# Can either use a Viterbi job or an uploaded job as a ForeignKey
 class CWFollowupJob(models.Model):
     user_id = models.IntegerField()
     name = models.CharField(max_length=55, null=False)
@@ -60,32 +20,15 @@ class CWFollowupJob(models.Model):
     creation_time = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now_add=True)
 
-    cw_job = models.ForeignKey(
-        CWJob,
-        related_name="followup_job",
-        on_delete=models.PROTECT,
-        blank=True,
-        null=True
-    )
+    candidate_group_id = models.IntegerField(blank=False, default=0)
 
     job_controller_id = models.IntegerField(default=None, blank=True, null=True)
 
     def as_json(self):
-        candidates = [
-            {
-                'source_dataset': candidate.source_dataset,
-                'candidate_frequency': candidate.candidate_frequency,
-                'target_binary': candidate.target_binary,
-                'orbit_tp': candidate.orbit_tp,
-                'asini': candidate.asini,
-                'orbit_period': candidate.orbit_period
-            }
-            for candidate in self.cw_job.candidates.all()
-        ]
         return dict(
             name=self.name,
             description=self.description,
-            candidates=candidates,
+            candidate_group_id=self.candidate_group_id,
             followups=list(self.followups.all().values_list('followup', flat=True))
         )
 

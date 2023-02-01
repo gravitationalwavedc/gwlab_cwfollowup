@@ -1,9 +1,8 @@
 import graphene
 import cwfollowup.schema
-import cwfollowup.viterbi_schema
 
 
-class Query(cwfollowup.schema.Query, cwfollowup.viterbi_schema.Query, graphene.ObjectType):
+class Query(cwfollowup.schema.Query, graphene.ObjectType):
     pass
 
 
