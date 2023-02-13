@@ -8,7 +8,6 @@ from django.utils import timezone
 from cwfollowup.utils.jobs.request_file_download_id import request_file_download_id
 from cwfollowup.utils.jobs.request_file_list import request_file_list
 from cwfollowup.utils.jobs.request_job_status import request_job_status
-from .variables import cwfollowup_parameters
 
 
 # Model to hold all the information for a followup job
@@ -20,7 +19,7 @@ class CWFollowupJob(models.Model):
     creation_time = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now_add=True)
 
-    candidate_group_id = models.IntegerField(blank=False, default=0)
+    candidate_group_id = models.CharField(blank=False, default='', max_length=60)
 
     job_controller_id = models.IntegerField(default=None, blank=True, null=True)
 

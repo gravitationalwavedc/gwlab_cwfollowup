@@ -5,7 +5,7 @@ import _ from 'lodash';
 import Parameters from '../Results/Parameters';
 import PageNav from './Atoms/PageNav';
 
-const ReviewJob = ({ handlePageChange }) => {
+const ReviewJob = ({ candidateGroup, handlePageChange }) => {
     const { values, errors, handleSubmit, validateForm } = useFormikContext();
     const errorKeys = Object.keys(errors);
 
@@ -18,7 +18,7 @@ const ReviewJob = ({ handlePageChange }) => {
 
     return (
         <React.Fragment>
-            <Parameters candidates={values.candidates} followups={values.followupChoices} />
+            <Parameters candidateGroup={candidateGroup} followups={values.followupChoices} />
             {errorKeys.length > 0 && <Row>
                 <Col className="text-danger">
                     Errors are present in:

@@ -5,7 +5,6 @@ import { HiOutlineSearch } from 'react-icons/hi';
 import Link from 'found/Link';
 import JobTable from '../Components/JobTable';
 import EmptyTableMessage from '../Components/EmptyTableMessage';
-import HomeBanner from '../Components/HomeBanner';
 
 const RECORDS_PER_PAGE = 100;
 
@@ -42,88 +41,85 @@ const PublicJobs = ({data, match, router, relay}) => {
     ];
 
     return (
-        <>
-            <HomeBanner match={match} router={router} />
-            <Container >
-                <h4 className="pt-5 pt-md-5 mb-0">
+        <Container >
+            <h4 className="pt-5 pt-md-5 mb-0">
                     Followups
-                </h4>
-                <Form>
-                    <Form.Row>
-                        <Col lg={4}>
-                            <Form.Group controlId="searchJobs">
-                                <Form.Label srOnly>
+            </h4>
+            <Form>
+                <Form.Row>
+                    <Col lg={4}>
+                        <Form.Group controlId="searchJobs">
+                            <Form.Label srOnly>
                               Search
-                                </Form.Label>
-                                <InputGroup>
-                                    <InputGroup.Prepend>
-                                        <InputGroup.Text>
-                                            <HiOutlineSearch />
-                                        </InputGroup.Text>
-                                    </InputGroup.Prepend>
-                                    <Form.Control 
-                                        placeholder="Search..." 
-                                        value={search} 
-                                        onChange={({target}) => setSearch(target.value)} />
-                                </InputGroup>
-                            </Form.Group>
-                        </Col>
-                        <Col md={3}>
-                            <Form.Group controlId="timeRange">
-                                <Form.Label srOnly>
-                              Time
-                                </Form.Label>
+                            </Form.Label>
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Text>
+                                        <HiOutlineSearch />
+                                    </InputGroup.Text>
+                                </InputGroup.Prepend>
                                 <Form.Control 
-                                    as="select" 
-                                    value={timeRange} 
-                                    onChange={({target}) => setTimeRange(target.value)} 
-                                    custom>
-                                    {timeOptions.map(option => 
-                                        <option 
-                                            key={option.value} 
-                                            value={option.value}>
-                                            {option.text}
-                                        </option>
-                                    )}
-                                </Form.Control>
-                            </Form.Group>
-                        </Col>
-                        <Col lg={4} xs={10}>
-                            <Link 
-                                as={Button}
-                                variant="outline-primary"
-                                to='/cwfollowup/job-list/' 
-                                exact 
-                                match={match} 
-                                router={router} 
-                                className="mr-1">
-                                    View my followups
-                            </Link>
-                        </Col>
-                    </Form.Row>
-                </Form>
-                <Row>
-                    <Col>
-                        { data.publicCwfollowupJobs.edges.length > 0 ? <JobTable
-                            data={data.publicCwfollowupJobs}
-                            setOrder={setOrder} 
-                            order={order} 
-                            setDirection={setDirection} 
-                            direction={direction}
-                            match={match}
-                            router={router}
-                            hasMore={relay.hasMore()}
-                            loadMore={loadMore}
-                        /> : <EmptyTableMessage/>}
+                                    placeholder="Search..." 
+                                    value={search} 
+                                    onChange={({target}) => setSearch(target.value)} />
+                            </InputGroup>
+                        </Form.Group>
                     </Col>
-                </Row>
-                <Navbar fixed="bottom" className="justify-content-center d-sm-none top-shadow">
-                    <Link as={Button} to='/cwfollowup/job-form/' exact match={match} router={router}>
+                    <Col md={3}>
+                        <Form.Group controlId="timeRange">
+                            <Form.Label srOnly>
+                              Time
+                            </Form.Label>
+                            <Form.Control 
+                                as="select" 
+                                value={timeRange} 
+                                onChange={({target}) => setTimeRange(target.value)} 
+                                custom>
+                                {timeOptions.map(option => 
+                                    <option 
+                                        key={option.value} 
+                                        value={option.value}>
+                                        {option.text}
+                                    </option>
+                                )}
+                            </Form.Control>
+                        </Form.Group>
+                    </Col>
+                    <Col lg={4} xs={10}>
+                        <Link 
+                            as={Button}
+                            variant="outline-primary"
+                            to='/cwfollowup/job-list/' 
+                            exact 
+                            match={match} 
+                            router={router} 
+                            className="mr-1">
+                                    View my followups
+                        </Link>
+                    </Col>
+                </Form.Row>
+            </Form>
+            <Row>
+                <Col>
+                    { data.publicCwfollowupJobs.edges.length > 0 ? <JobTable
+                        data={data.publicCwfollowupJobs}
+                        setOrder={setOrder} 
+                        order={order} 
+                        setDirection={setDirection} 
+                        direction={direction}
+                        match={match}
+                        router={router}
+                        hasMore={relay.hasMore()}
+                        loadMore={loadMore}
+                    /> : <EmptyTableMessage/>}
+                </Col>
+            </Row>
+            <Navbar fixed="bottom" className="justify-content-center d-sm-none top-shadow">
+                <Link as={Button} to='/cwfollowup/job-form/' exact match={match} router={router}>
                                 New followup
-                    </Link>
-                </Navbar>
-            </Container>
-        </>
+                </Link>
+            </Navbar>
+        </Container>
     );
 };
 

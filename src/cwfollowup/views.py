@@ -39,7 +39,7 @@ def create_followup_job(user, name, description, candidate_group_id, followups):
 
         # Create the parameter json
         params = followup_job.as_json()
-        print(params)
+        params['candidates'] = json.loads(get_candidates_json(group_id=candidate_group_id)['candidatesJson'])
 
         # Construct the request parameters to the job controller, note that parameters must be a string, not an objects
         data = {
@@ -48,30 +48,30 @@ def create_followup_job(user, name, description, candidate_group_id, followups):
             "bundle": "bbb09782b80376c58c1909f447ef07b5dab91630"
         }
 
-        # Initiate the request to the job controller
-        result = requests.request(
-            "POST", settings.GWCLOUD_JOB_CONTROLLER_API_URL + "/job/",
-            data=json.dumps(data),
-            headers={
-                "Authorization": jwt_enc
-            }
-        )
+        # # Initiate the request to the job controller
+        # result = requests.request(
+        #     "POST", settings.GWCLOUD_JOB_CONTROLLER_API_URL + "/job/",
+        #     data=json.dumps(data),
+        #     headers={
+        #         "Authorization": jwt_enc
+        #     }
+        # )
 
-        # Check that the request was successful
-        if result.status_code != 200:
-            # Oops
-            msg = f"Error submitting job, got error code: {result.status_code}\n\n{result.headers}\n\n{result.content}"
-            print(msg)
-            raise Exception(msg)
+        # # Check that the request was successful
+        # if result.status_code != 200:
+        #     # Oops
+        #     msg = f"Error submitting job, got error code: {result.status_code}\n\n{result.headers}\n\n{result.content}"
+        #     print(msg)
+        #     raise Exception(msg)
 
-        print(f"Job submitted OK.\n{result.headers}\n\n{result.content}")
+        # print(f"Job submitted OK.\n{result.headers}\n\n{result.content}")
 
-        # Parse the response from the job controller
-        result = json.loads(result.content)
+        # # Parse the response from the job controller
+        # result = json.loads(result.content)
 
-        # Save the job id
-        followup_job.job_controller_id = result["jobId"]
-        followup_job.save()
+        # # Save the job id
+        # followup_job.job_controller_id = result["jobId"]
+        # followup_job.save()
 
         return followup_job
 
@@ -86,3 +86,54 @@ def update_cwfollowup_job(job_id, user, private):
         return 'Job saved!'
     else:
         raise Exception('You must own the job to change the privacy!')
+
+
+def get_candidate_group(group_id, headers={}):
+    query = """
+        query ($groupId: ID!) {
+            candidateGroup(id: $groupId) {
+                id
+                name
+                description
+                nCandidates
+            }
+        }
+    """
+
+    variables = {"groupId": group_id}
+
+    result = requests.request(
+        method="POST",
+        url=settings.GWLAB_GWCANDIDATE_GRAPHQL_URL,
+        headers=headers,
+        json={
+            "query": query,
+            "variables": variables
+        }
+    )
+
+    return json.loads(result.content)['data']['candidateGroup']
+
+
+def get_candidates_json(group_id, headers={}):
+    query = """
+        query ($groupId: ID!) {
+            candidateGroup(id: $groupId) {
+                candidatesJson
+            }
+        }
+    """
+
+    variables = {"groupId": group_id}
+
+    result = requests.request(
+        method="POST",
+        url=settings.GWLAB_GWCANDIDATE_GRAPHQL_URL,
+        headers=headers,
+        json={
+            "query": query,
+            "variables": variables
+        }
+    )
+
+    return json.loads(result.content)['data']['candidateGroup']

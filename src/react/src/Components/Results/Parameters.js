@@ -3,19 +3,30 @@ import { Col, Row, Table } from 'react-bootstrap';
 import FormCard from '../Forms/FormCard';
 import followupOptions from '../../Utils/followupOptions';
 
-const Parameters = ({ candidates, followups }) => (
+const Parameters = ({ candidateGroup, followups }) => (
     <Row>
         <Col>
-            <FormCard title="Candidate Parameters">
-                Placeholder
+            <FormCard title="Candidate Group">
+                <Table>
+                    <tbody>
+                        <tr>
+                            <th>{candidateGroup.name}</th>
+                            <td className="text-right">{`${candidateGroup.nCandidates} candidates`}</td>
+                        </tr>
+                        <tr>
+                            <td>{candidateGroup.description}</td>
+                            <td />
+                        </tr>
+                    </tbody>
+                </Table>
             </FormCard>
             <FormCard title="Followups">
                 <Table>
                     <tbody>
                         {
-                            followups.map((followup, index) => {
+                            followups.map(followup => {
                                 const followupObj = followupOptions.find(obj => obj.value === followup);
-                                return <tr key={index}>
+                                return <tr key={followupObj.label}>
                                     <th>{followupObj.label}</th>
                                     <td className="text-right">{followupObj.shortDescription}</td>
                                 </tr>;

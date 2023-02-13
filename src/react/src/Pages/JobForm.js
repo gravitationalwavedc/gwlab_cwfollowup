@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import {Col, Row, Nav, Tab, Container} from 'react-bootstrap';
 import { Formik, Form } from 'formik';
 import JobTitle from '../Components/Forms/JobTitle';
-import CandidateForm from '../Components/Forms/CandidateForm';
 import FollowupsForm from '../Components/Forms/FollowupsForm';
 import ReviewJob from '../Components/Forms/ReviewJob';
 import initialValues from '../Components/Forms/initialValues';
 import validationSchema from '../Components/Forms/validationSchema';
-import { graphql, commitMutation } from 'react-relay';
+import { graphql, commitMutation, createFragmentContainer } from 'react-relay';
 import _ from 'lodash';
 import { harnessApi } from '../index';
 
@@ -23,7 +22,9 @@ const submitMutation = graphql`
 
 
 const JobForm = ({ data, match, router }) => {
-    const [key, setKey] = useState('candidates');
+    const [key, setKey] = useState('followups');
+
+    const {candidateGroup} = data;
 
     const handleJobSubmission = (values) => {
         // The mutation requires all number values to be strings.
@@ -37,6 +38,7 @@ const JobForm = ({ data, match, router }) => {
                 name: values.name,
                 description: values.description,
                 followups: values.followupChoices,
+                candidateGroupId: candidateGroup.id
             }
         };
 
@@ -73,12 +75,6 @@ const JobForm = ({ data, match, router }) => {
                             <Col md={2}>
                                 <Nav className="flex-column">
                                     <Nav.Item>
-                                        <Nav.Link eventKey="candidates">
-                                            <h5>Candidate</h5>
-                                            <p>Specify details of candidate</p>
-                                        </Nav.Link>
-                                    </Nav.Item>
-                                    <Nav.Item>
                                         <Nav.Link eventKey="followups">
                                             <h5>Followups</h5>
                                             <p>Specify which followups should be run</p>
@@ -94,14 +90,11 @@ const JobForm = ({ data, match, router }) => {
                             </Col>
                             <Col md={8}>
                                 <Tab.Content>
-                                    <Tab.Pane eventKey="candidates">
-                                        <CandidateForm handlePageChange={setKey}/>
-                                    </Tab.Pane>
                                     <Tab.Pane data-testid="followupsPane" eventKey="followups">
                                         <FollowupsForm handlePageChange={setKey}/>
                                     </Tab.Pane>
-                                    <Tab.Pane eventKey="review">
-                                        <ReviewJob handlePageChange={setKey}/>
+                                    <Tab.Pane data-testid="reviewPane" eventKey="review">
+                                        <ReviewJob candidateGroup={candidateGroup} handlePageChange={setKey}/>
                                     </Tab.Pane>
                                 </Tab.Content>
                             </Col>
@@ -113,4 +106,19 @@ const JobForm = ({ data, match, router }) => {
     );
 };
 
-export default JobForm;
+export default createFragmentContainer(JobForm,
+    {
+        data: graphql`
+            fragment JobForm_data on Query @argumentDefinitions(
+                groupId: {type: "ID!"}
+            ){
+                candidateGroup (groupId: $groupId) {
+                    id
+                    name
+                    description
+                    nCandidates
+                }
+            }
+        `,
+    },
+);

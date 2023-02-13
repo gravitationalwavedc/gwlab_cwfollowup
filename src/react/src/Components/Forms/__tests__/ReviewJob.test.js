@@ -14,15 +14,21 @@ describe('the review job component', () => {
                 {children}
             </Formik>;
 
+    const mockCandidateGroup = {
+        name: 'TestName',
+        description: 'Test description',
+        nCandidates: 1
+    };
+
     const renderTest = (formikProps) => render(
-        <ReviewJob handlePageChange={mockPageChange}/>,
+        <ReviewJob candidateGroup={mockCandidateGroup} handlePageChange={mockPageChange}/>,
         {wrapper: formikWrapper(formikProps)}
     );
 
     it('should render', () => {
         expect.hasAssertions();
         renderTest({initialValues: initialValues});
-        expect(screen.queryByText('Candidate Parameters')).toBeInTheDocument();
+        expect(screen.queryByText('Candidate Group')).toBeInTheDocument();
     });
 
     it('should render errors', async () => {

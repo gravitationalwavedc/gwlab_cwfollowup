@@ -29,12 +29,19 @@ class TestJobSubmission(CwFollowupTestCase):
             status=200
         )
 
+        self.responses.add(
+            responses.POST,
+            settings.GWLAB_GWCANDIDATE_GRAPHQL_URL,
+            body=json.dumps({"data": {"candidateGroup": {"candidatesJson": '[{"name": "test_candidate"}]'}}}),
+            status=200
+        )
+
         params = {
             "input": {
                 "name": "TestJob",
                 "description": "test job",
                 "candidateGroupId": "1",
-                "followups": ['psd_plotter']
+                "followups": ['psd_plotter'],
             }
         }
 

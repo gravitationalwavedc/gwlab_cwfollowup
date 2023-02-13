@@ -1,18 +1,12 @@
 import React from 'react';
-import { HiOutlinePlus } from 'react-icons/hi';
 import Link from 'found/Link';
-import { Container, Button } from 'react-bootstrap';
+import { Container, Button, Row, Col } from 'react-bootstrap';
+import HomeBanner from '../Components/HomeBanner';
 
-const HomePage = ({ router, ...match }) => {
-    return (
-        <Container>
-            <Link as={Button} to='/cwfollowup/new-job/' exact match={match} router={router}>
-                <HiOutlinePlus size={18} className="mb-1 mr-1"/>
-                Start a new job 
-            </Link>
-            <div>This will contain the CWFollowup job list</div>
-        </Container>
-    )
-}
+const HomePage = ({ match, router }) => (
+    <Container fluid className="banner d-none d-sm-block">
+        <HomeBanner match={match} router={router} />
+    </Container>
+);
 
 export default HomePage;
