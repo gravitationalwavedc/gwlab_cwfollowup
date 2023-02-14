@@ -4,6 +4,7 @@ import datetime
 import requests
 from django.conf import settings
 from django.db import transaction
+from graphql_relay.node.node import to_global_id
 
 from .models import CWFollowupJob, CWFollowup
 
@@ -39,7 +40,8 @@ def create_followup_job(user, name, description, candidate_group_id, followups):
 
         # Create the parameter json
         params = followup_job.as_json()
-        params['candidates'] = json.loads(get_candidates_json(group_id=candidate_group_id)['candidatesJson'])
+        group_id = to_global_id('CandidateGroupNode', candidate_group_id)
+        params['candidates'] = json.loads(get_candidates_json(group_id=group_id)['candidatesJson'])
 
         # Construct the request parameters to the job controller, note that parameters must be a string, not an objects
         data = {
@@ -48,30 +50,30 @@ def create_followup_job(user, name, description, candidate_group_id, followups):
             "bundle": "bbb09782b80376c58c1909f447ef07b5dab91630"
         }
 
-        # # Initiate the request to the job controller
-        # result = requests.request(
-        #     "POST", settings.GWCLOUD_JOB_CONTROLLER_API_URL + "/job/",
-        #     data=json.dumps(data),
-        #     headers={
-        #         "Authorization": jwt_enc
-        #     }
-        # )
+        # Initiate the request to the job controller
+        result = requests.request(
+            "POST", settings.GWCLOUD_JOB_CONTROLLER_API_URL + "/job/",
+            data=json.dumps(data),
+            headers={
+                "Authorization": jwt_enc
+            }
+        )
 
-        # # Check that the request was successful
-        # if result.status_code != 200:
-        #     # Oops
-        #     msg = f"Error submitting job, got error code: {result.status_code}\n\n{result.headers}\n\n{result.content}"
-        #     print(msg)
-        #     raise Exception(msg)
+        # Check that the request was successful
+        if result.status_code != 200:
+            # Oops
+            msg = f"Error submitting job, got error code: {result.status_code}\n\n{result.headers}\n\n{result.content}"
+            print(msg)
+            raise Exception(msg)
 
-        # print(f"Job submitted OK.\n{result.headers}\n\n{result.content}")
+        print(f"Job submitted OK.\n{result.headers}\n\n{result.content}")
 
-        # # Parse the response from the job controller
-        # result = json.loads(result.content)
+        # Parse the response from the job controller
+        result = json.loads(result.content)
 
-        # # Save the job id
-        # followup_job.job_controller_id = result["jobId"]
-        # followup_job.save()
+        # Save the job id
+        followup_job.job_controller_id = result["jobId"]
+        followup_job.save()
 
         return followup_job
 

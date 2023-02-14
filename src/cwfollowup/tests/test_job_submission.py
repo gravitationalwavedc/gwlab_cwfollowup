@@ -40,7 +40,7 @@ class TestJobSubmission(CwFollowupTestCase):
             "input": {
                 "name": "TestJob",
                 "description": "test job",
-                "candidateGroupId": "1",
+                "candidateGroupId": "Q2FuZGlkYXRlR3JvdXBOb2RlOnRlc3Q=",
                 "followups": ['psd_plotter'],
             }
         }
@@ -76,5 +76,5 @@ class TestJobSubmission(CwFollowupTestCase):
 
         self.assertEqual(job.name, _params['name'])
         self.assertEqual(job.description, _params['description'])
-        self.assertEqual(job.candidate_group_id, int(_params['candidateGroupId']))
+        self.assertEqual(job.candidate_group_id, 'test')
         self.assertEqual(list(job.followups.all().values_list('followup', flat=True)), _params['followups'])

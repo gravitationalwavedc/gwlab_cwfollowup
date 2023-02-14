@@ -19,7 +19,7 @@ class CWFollowupJob(models.Model):
     creation_time = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now_add=True)
 
-    candidate_group_id = models.CharField(blank=False, default='', max_length=60)
+    candidate_group_id = models.CharField(blank=False, default='', max_length=24)
 
     job_controller_id = models.IntegerField(default=None, blank=True, null=True)
 

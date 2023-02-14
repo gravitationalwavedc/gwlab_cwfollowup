@@ -122,9 +122,10 @@ class CWFollowupJobNode(DjangoObjectType):
                 "number": 0,
                 "data": "Unknown"
             }
-    
+
     def resolve_candidate_group(parent, info):
-        group_data = get_candidate_group(parent.candidate_group_id, info.context.headers)
+        group_id = to_global_id('CandidateGroupNode', parent.candidate_group_id)
+        group_data = get_candidate_group(group_id, info.context.headers)
 
         return CandidateGroupType(**group_data)
 
@@ -258,8 +259,9 @@ class CWFollowupJobMutation(relay.ClientIDMutation):
     result = graphene.Field(CWFollowupJobCreationResult)
 
     @classmethod
-    def mutate_and_get_payload(cls, root, info, **kwargs):
-        followup_job = create_followup_job(info.context.user, **kwargs)
+    def mutate_and_get_payload(cls, root, info, name, description, candidate_group_id, followups):
+        group_id = from_global_id(candidate_group_id)[1]
+        followup_job = create_followup_job(info.context.user, name, description, group_id, followups)
         # Convert the viterbi job id to a global id
         job_id = to_global_id("CWFollowupJobNode", followup_job.id)
 
