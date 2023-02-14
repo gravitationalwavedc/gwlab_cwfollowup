@@ -239,6 +239,7 @@ class Query(graphene.ObjectType):
             files=result
         )
 
+    @login_required
     def resolve_candidate_group(parent, info, group_id):
         group_data = get_candidate_group(group_id, info.context.headers)
 
@@ -259,6 +260,7 @@ class CWFollowupJobMutation(relay.ClientIDMutation):
     result = graphene.Field(CWFollowupJobCreationResult)
 
     @classmethod
+    @login_required
     def mutate_and_get_payload(cls, root, info, name, description, candidate_group_id, followups):
         group_id = from_global_id(candidate_group_id)[1]
         followup_job = create_followup_job(info.context.user, name, description, group_id, followups)

@@ -1,6 +1,5 @@
 import React from 'react';
-import Link from 'found/Link';
-import { Container, Button, Row, Col } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import HomeBanner from '../Components/HomeBanner';
 
 const HomePage = ({ match, router }) => (
