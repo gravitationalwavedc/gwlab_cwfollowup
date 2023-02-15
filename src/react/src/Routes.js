@@ -2,13 +2,13 @@ import React from 'react';
 import {Route} from 'found';
 import {graphql} from 'react-relay';
 import {harnessApi} from './index';
-import NewJob from './Pages/NewJob';
 import JobForm from './Pages/JobForm';
 import Loading from './Components/Loading';
 import {RedirectException} from 'found';
 import MyJobs from './Pages/MyJobs';
 import PublicJobs from './Pages/PublicJobs';
 import ViewJob from './Pages/ViewJob';
+import HomePage from './Pages/HomePage';
 
 const handleRender = ({Component, props}) => {
     if (!Component || !props)
@@ -24,6 +24,11 @@ function getRoutes() {
     return (
         <Route>
             <Route
+                Component={HomePage}
+                environment={harnessApi.getEnvironment('cwfollowup')}
+                render={handleRender}/>
+            <Route
+                path="public-jobs/"
                 Component={PublicJobs}
                 query={graphql`
                 query Routes_HomePage_Query (
@@ -42,18 +47,21 @@ function getRoutes() {
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 render={handleRender}/>
             <Route
-                path="new-job"
-                Component={NewJob}
-                environment={harnessApi.getEnvironment('cwfollowup')}
-                render={handleRender}/>
-            <Route
-                path="new-job/job-form/"
+                path="new-job/"
+                query={graphql`
+                    query Routes_JobForm_Query ($groupId: ID!) {
+                      ...JobForm_data @arguments(groupId: $groupId)
+                    }
+                `}
+                prepareVariables={(_, match) => ({
+                    groupId: match.location.state.candidateGroupId
+                })}
                 Component={JobForm}
                 environment={harnessApi.getEnvironment('cwfollowup')}
                 render={handleRender}
             />
             <Route
-                path="job-list"
+                path="my-jobs/"
                 query={graphql`
                     query Routes_JobList_Query(
                       $count: Int!,

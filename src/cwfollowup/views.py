@@ -4,6 +4,7 @@ import datetime
 import requests
 from django.conf import settings
 from django.db import transaction
+from graphql_relay.node.node import to_global_id
 
 from .models import CWFollowupJob, CWFollowup
 
@@ -39,7 +40,8 @@ def create_followup_job(user, name, description, candidate_group_id, followups):
 
         # Create the parameter json
         params = followup_job.as_json()
-        print(params)
+        group_id = to_global_id('CandidateGroupNode', candidate_group_id)
+        params['candidates'] = json.loads(get_candidates_json(group_id=group_id)['candidatesJson'])
 
         # Construct the request parameters to the job controller, note that parameters must be a string, not an objects
         data = {
@@ -86,3 +88,54 @@ def update_cwfollowup_job(job_id, user, private):
         return 'Job saved!'
     else:
         raise Exception('You must own the job to change the privacy!')
+
+
+def get_candidate_group(group_id, headers={}):
+    query = """
+        query ($groupId: ID!) {
+            candidateGroup(id: $groupId) {
+                id
+                name
+                description
+                nCandidates
+            }
+        }
+    """
+
+    variables = {"groupId": group_id}
+
+    result = requests.request(
+        method="POST",
+        url=settings.GWLAB_GWCANDIDATE_GRAPHQL_URL,
+        headers=headers,
+        json={
+            "query": query,
+            "variables": variables
+        }
+    )
+
+    return json.loads(result.content)['data']['candidateGroup']
+
+
+def get_candidates_json(group_id, headers={}):
+    query = """
+        query ($groupId: ID!) {
+            candidateGroup(id: $groupId) {
+                candidatesJson
+            }
+        }
+    """
+
+    variables = {"groupId": group_id}
+
+    result = requests.request(
+        method="POST",
+        url=settings.GWLAB_GWCANDIDATE_GRAPHQL_URL,
+        headers=headers,
+        json={
+            "query": query,
+            "variables": variables
+        }
+    )
+
+    return json.loads(result.content)['data']['candidateGroup']

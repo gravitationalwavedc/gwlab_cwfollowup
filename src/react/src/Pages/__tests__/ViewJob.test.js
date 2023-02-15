@@ -45,6 +45,11 @@ describe('view job page', () => {
                     number:'400',
                     date:'2020-10-05 04:49:58 UTC'
                 },
+                candidateGroup: {
+                    name: 'TestName',
+                    description: 'Test description',
+                    nCandidates: 1
+                },
                 followups: [
                     'lines'
                 ],

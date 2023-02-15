@@ -9,7 +9,7 @@ from graphql_jwt.decorators import login_required
 from graphql_relay.node.node import from_global_id, to_global_id
 
 from .types import OutputStartType, JobStatusType
-from .views import create_followup_job
+from .views import create_followup_job, get_candidate_group
 from .status import JobStatus
 from .models import CWFollowupJob, FileDownloadToken
 
@@ -65,6 +65,13 @@ class PublicCWFollowupJobFilter(FilterSet):
         return CWFollowupJob.public_cwfollowup_job_filter(super(PublicCWFollowupJobFilter, self).qs, self)
 
 
+class CandidateGroupType(graphene.ObjectType):
+    id = graphene.ID()
+    name = graphene.String()
+    description = graphene.String()
+    nCandidates = graphene.Int()
+
+
 class CWFollowupJobNode(DjangoObjectType):
     class Meta:
         model = CWFollowupJob
@@ -75,6 +82,7 @@ class CWFollowupJobNode(DjangoObjectType):
     start = graphene.Field(OutputStartType)
     job_status = graphene.Field(JobStatusType)
     followups = graphene.List(graphene.String)
+    candidate_group = graphene.Field(CandidateGroupType)
 
     def resolve_followups(parent, info):
         return parent.followups.values_list('followup', flat=True)
@@ -114,6 +122,12 @@ class CWFollowupJobNode(DjangoObjectType):
                 "number": 0,
                 "data": "Unknown"
             }
+
+    def resolve_candidate_group(parent, info):
+        group_id = to_global_id('CandidateGroupNode', parent.candidate_group_id)
+        group_data = get_candidate_group(group_id, info.context.headers)
+
+        return CandidateGroupType(**group_data)
 
 
 class CWFollowupResultFile(graphene.ObjectType):
@@ -157,6 +171,8 @@ class Query(graphene.ObjectType):
     )
 
     cwfollowup_result_files = graphene.Field(CWFollowupResultFiles, job_id=graphene.ID(required=True))
+
+    candidate_group = graphene.Field(CandidateGroupType, group_id=graphene.ID(required=True))
 
     @login_required
     def resolve_public_cwfollowup_jobs(self, info, **kwargs):
@@ -223,6 +239,12 @@ class Query(graphene.ObjectType):
             files=result
         )
 
+    @login_required
+    def resolve_candidate_group(parent, info, group_id):
+        group_data = get_candidate_group(group_id, info.context.headers)
+
+        return CandidateGroupType(**group_data)
+
 
 class CWFollowupJobCreationResult(graphene.ObjectType):
     job_id = graphene.String()
@@ -232,14 +254,16 @@ class CWFollowupJobMutation(relay.ClientIDMutation):
     class Input:
         name = graphene.String()
         description = graphene.String()
-        candidate_group_id = graphene.Int()
+        candidate_group_id = graphene.ID()
         followups = graphene.List(graphene.String)
 
     result = graphene.Field(CWFollowupJobCreationResult)
 
     @classmethod
-    def mutate_and_get_payload(cls, root, info, **kwargs):
-        followup_job = create_followup_job(info.context.user, **kwargs)
+    @login_required
+    def mutate_and_get_payload(cls, root, info, name, description, candidate_group_id, followups):
+        group_id = from_global_id(candidate_group_id)[1]
+        followup_job = create_followup_job(info.context.user, name, description, group_id, followups)
         # Convert the viterbi job id to a global id
         job_id = to_global_id("CWFollowupJobNode", followup_job.id)
 
