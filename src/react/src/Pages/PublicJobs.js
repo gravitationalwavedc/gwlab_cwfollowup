@@ -43,7 +43,7 @@ const PublicJobs = ({data, match, router, relay}) => {
     return (
         <Container >
             <h4 className="pt-5 pt-md-5 mb-0">
-                    Followups
+                Public Followups
             </h4>
             <Form>
                 <Form.Row>
@@ -89,7 +89,7 @@ const PublicJobs = ({data, match, router, relay}) => {
                         <Link 
                             as={Button}
                             variant="outline-primary"
-                            to='/cwfollowup/job-list/' 
+                            to='/cwfollowup/my-jobs/' 
                             exact 
                             match={match} 
                             router={router} 

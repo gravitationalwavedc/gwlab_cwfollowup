@@ -5,7 +5,6 @@ import { HiOutlineSearch } from 'react-icons/hi';
 import Link from 'found/Link';
 import EmptyTableMessage from '../Components/EmptyTableMessage';
 import JobTable from '../Components/JobTable';
-import HomeBanner from '../Components/HomeBanner';
 
 const RECORDS_PER_PAGE = 100;
 
@@ -44,7 +43,6 @@ const MyJobs = ({data, match, router,relay}) => {
 
     return (
         <>
-            <HomeBanner match={match} router={router} />
             <Container >
                 <h4 className="pt-5 pt-md-5 mb-0">
                     My followups 
@@ -93,7 +91,7 @@ const MyJobs = ({data, match, router,relay}) => {
                             <Link 
                                 as={Button}
                                 variant="outline-primary"
-                                to='/cwfollowup/' 
+                                to='/cwfollowup/public-jobs/' 
                                 exact 
                                 match={match} 
                                 router={router} 

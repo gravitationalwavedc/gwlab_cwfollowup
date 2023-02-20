@@ -7,7 +7,6 @@ import ReviewJob from '../Components/Forms/ReviewJob';
 import initialValues from '../Components/Forms/initialValues';
 import validationSchema from '../Components/Forms/validationSchema';
 import { graphql, commitMutation, createFragmentContainer } from 'react-relay';
-import _ from 'lodash';
 import { harnessApi } from '../index';
 
 const submitMutation = graphql`
@@ -21,7 +20,7 @@ const submitMutation = graphql`
 `;
 
 
-const JobForm = ({ data, match, router }) => {
+const JobForm = ({ data, router }) => {
     const [key, setKey] = useState('followups');
 
     const {candidateGroup} = data;

@@ -1,11 +1,8 @@
 import React from 'react';
-import { Container } from 'react-bootstrap';
-import HomeBanner from '../Components/HomeBanner';
+import FollowupBanner from '../Components/FollowupBanner';
 
 const HomePage = ({ match, router }) => (
-    <Container fluid className="banner d-none d-sm-block">
-        <HomeBanner match={match} router={router} />
-    </Container>
+    <FollowupBanner title='CWFollowup' match={match} router={router} />
 );
 
 export default HomePage;

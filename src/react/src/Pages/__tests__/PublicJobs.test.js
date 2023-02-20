@@ -54,10 +54,10 @@ describe('public Job Page', () => {
         environment.mock.resolveMostRecentOperation(operation => 
             MockPayloadGenerator.generate(operation, mockReturn)
         );
-        expect(getByText('Followups')).toBeInTheDocument();
+        expect(getByText('Public Followups')).toBeInTheDocument();
     });
 
-    it('calls refetchConnection when the serach field is updated', () => {
+    it('calls refetchConnection when the search field is updated', () => {
         expect.hasAssertions();
         const { getByLabelText, getByText, queryByText } = render(<TestRenderer/>);
         environment.mock.resolveMostRecentOperation(operation => 

@@ -126,7 +126,6 @@ class CWFollowupJobNode(DjangoObjectType):
     def resolve_candidate_group(parent, info):
         group_id = to_global_id('CandidateGroupNode', parent.candidate_group_id)
         group_data = get_candidate_group(group_id, info.context.headers)
-
         return CandidateGroupType(**group_data)
 
 
@@ -172,7 +171,7 @@ class Query(graphene.ObjectType):
 
     cwfollowup_result_files = graphene.Field(CWFollowupResultFiles, job_id=graphene.ID(required=True))
 
-    candidate_group = graphene.Field(CandidateGroupType, group_id=graphene.ID(required=True))
+    candidate_group = graphene.Field(CandidateGroupType, group_id=graphene.ID())
 
     @login_required
     def resolve_public_cwfollowup_jobs(self, info, **kwargs):
@@ -240,7 +239,10 @@ class Query(graphene.ObjectType):
         )
 
     @login_required
-    def resolve_candidate_group(parent, info, group_id):
+    def resolve_candidate_group(parent, info, group_id=None):
+        if not group_id:
+            return None
+
         group_data = get_candidate_group(group_id, info.context.headers)
 
         return CandidateGroupType(**group_data)
