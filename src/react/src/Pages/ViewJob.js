@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import { graphql, createFragmentContainer } from 'react-relay';
-import { Row, Nav, Col, Button, Container, Tab, Toast } from 'react-bootstrap';
+import { Row, Nav, Col, Container, Tab, Toast } from 'react-bootstrap';
 import moment from 'moment';
 import Files from '../Components/Results/Files';
 import Parameters from '../Components/Results/Parameters';
-import Link from 'found/Link';
 import PrivacyToggle from '../Components/Results/PrivacyToggle';
 
 const ViewJob = (props) => {
