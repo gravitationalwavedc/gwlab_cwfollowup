@@ -6,10 +6,12 @@ from core.misc import working_directory
 from _bundledb import create_or_update_job
 from scheduler.slurm import slurm_submit
 
+
 def estimate_time(candidates, followup):
     if followup == 'psd_plotter':
         return min(len(candidates), 168)
     return 1
+
 
 def submit_template(submit_dir, job_name, followups):
     lines = [
