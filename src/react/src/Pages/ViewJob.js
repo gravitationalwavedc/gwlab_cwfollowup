@@ -40,14 +40,6 @@ const ViewJob = (props) => {
                     <p>{start.description}</p>
                     <p>Updated on {updated}</p>
                     <p>{props.data.cwfollowupJob.jobStatus.name}</p>
-                    <Link as={Button} to={{
-                        pathname: '/cwfollowup/job-form/duplicate/',
-                        state: {
-                            jobId: props.match.params.jobId
-                        }
-                    }} activeClassName="selected" exact match={props.match} router={props.router}>
-                      Duplicate job
-                    </Link>
                     <PrivacyToggle 
                         userId={userId} 
                         jobId={props.match.params.jobId} 
