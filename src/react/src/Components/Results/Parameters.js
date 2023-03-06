@@ -6,7 +6,7 @@ import followupOptions from '../../Utils/followupOptions';
 const Parameters = ({ candidateGroup, followups }) => (
     <Row>
         <Col>
-            <FormCard title="Candidate Group">
+            <FormCard title="Candidate Group" className="bg-transparent">
                 <Table>
                     <tbody>
                         <tr>
@@ -20,7 +20,7 @@ const Parameters = ({ candidateGroup, followups }) => (
                     </tbody>
                 </Table>
             </FormCard>
-            <FormCard title="Followups">
+            <FormCard title="Followups" className="bg-transparent">
                 <Table>
                     <tbody>
                         {

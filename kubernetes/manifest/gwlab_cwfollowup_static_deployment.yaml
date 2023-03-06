@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: gwlab-cwfollowup-static
-          image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_static:0.4
+          image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_static:0.5
           ports:
             - name: http
               containerPort: 8000
