@@ -4,13 +4,7 @@ import PrivacyToggle from '../Components/Results/PrivacyToggle';
 import moment from 'moment';
 
 const JobHeading = ({ jobData }) => {
-    const [saved, setSaved] = useState(false); 
     const [showNotification, setShowNotification] = useState(false);
-
-    const onSave = (saved, message) => {
-        setSaved(saved);
-        setShowNotification(true);
-    };
 
     const { id, start, lastUpdated, userId, jobStatus } = jobData;
 
@@ -38,8 +32,7 @@ const JobHeading = ({ jobData }) => {
                 <PrivacyToggle 
                     userId={userId} 
                     jobId={id} 
-                    data={start} 
-                    onUpdate={onSave} />
+                    data={start} />
             </Col>
         </Row>
     </Container>;
