@@ -3,8 +3,14 @@ import os
 from pathlib import Path
 
 from core.misc import working_directory
-from db import get_unique_job_id, update_job
+from _bundledb import create_or_update_job
 from scheduler.slurm import slurm_submit
+
+
+def estimate_time(candidates, followup):
+    if followup == 'psd_plotter':
+        return min(len(candidates), 168)
+    return 1
 
 
 def submit_template(submit_dir, job_name, followups):
@@ -25,12 +31,12 @@ echo "{jid} ${{{jid}[-1]}}" >> {submit_dir}/slurm_ids"""
     return '\n\n'.join(lines)
 
 
-def generic_followup_script_template(submit_dir, followup_results_dir, job_name, followup):
+def generic_followup_script_template(submit_dir, followup_results_dir, job_name, candidates, followup):
     return f"""#!/bin/bash
 #SBATCH --job-name={job_name}_{followup}
 #SBATCH --account=oz986
 #SBATCH --ntasks=1
-#SBATCH --time=01:00:00
+#SBATCH --time={estimate_time(candidates, followup):02}:00:00
 #SBATCH --mem-per-cpu=8GB
 #SBATCH --tmp=8GB
 #SBATCH --cpus-per-task=1
@@ -44,9 +50,9 @@ def generic_followup_script_template(submit_dir, followup_results_dir, job_name,
 python /fred/oz986/cwfollowup/{followup}/{followup}.py {submit_dir}/{job_name}_{followup}.json"""
 
 
-def generic_followup_json(followup_results_dir, candidates, followup):
+def generic_followup_json(followup_results_dir, candidates_json, followup):
     return {
-        'candidates': candidates,
+        'candidates_json': str(candidates_json),
         'path': str(followup_results_dir),
         'script_path': f'/fred/oz986/cwfollowup/{followup}'
     }
@@ -82,17 +88,28 @@ def submit(details, input_params):
     slurm_script.touch(exist_ok=True)
     slurm_script.write_text(submit_template(submit_dir, job_name, input_params['followups']))
 
+    # Write candidates json
+    candidates_json_path = submit_dir / f'{job_name}_candidates.json'
+    with candidates_json_path.open("w+", encoding="utf-8") as f:
+        json.dump(input_params['candidates'], f, ensure_ascii=False, indent=4)
+
     for followup in input_params['followups']:
         followup_results_dir = results_dir / followup
         followup_results_dir.mkdir(parents=True, exist_ok=True)
 
         # Create input json for followup
         with Path(submit_dir / f'{job_name}_{followup}.json').open("w+", encoding="utf-8") as f:
-            followup_params = generic_followup_json(followup_results_dir, input_params['candidates'], followup)
+            followup_params = generic_followup_json(followup_results_dir, candidates_json_path, followup)
             json.dump(followup_params, f, ensure_ascii=False, indent=4)
 
         # Create slurm script for followup
-        script = generic_followup_script_template(submit_dir, followup_results_dir, job_name, followup)
+        script = generic_followup_script_template(
+            submit_dir,
+            followup_results_dir,
+            job_name,
+            input_params['candidates'],
+            followup
+        )
         followup_slurm_script = submit_dir / f'{job_name}_{followup}.sh'
         followup_slurm_script.touch()
         followup_slurm_script.write_text(script)
@@ -107,14 +124,14 @@ def submit(details, input_params):
 
     # Create a new job to store details
     job = {
-        'job_id': get_unique_job_id(),
+        'job_id': 0,
         'submit_id': submit_bash_id,
         'working_directory': str(wk_dir),
         'submit_directory': submit_directory
     }
 
     # Save the job in the database
-    update_job(job)
+    create_or_update_job(job)
 
     # return the job id
     return job['job_id']

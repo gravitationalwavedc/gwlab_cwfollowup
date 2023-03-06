@@ -1,10 +1,9 @@
 import React, {useState} from 'react';
 import { graphql, createFragmentContainer } from 'react-relay';
-import { Row, Nav, Col, Button, Container, Tab, Toast } from 'react-bootstrap';
+import { Row, Nav, Col, Container, Tab, Toast } from 'react-bootstrap';
 import moment from 'moment';
 import Files from '../Components/Results/Files';
 import Parameters from '../Components/Results/Parameters';
-import Link from 'found/Link';
 import PrivacyToggle from '../Components/Results/PrivacyToggle';
 
 const ViewJob = (props) => {
@@ -40,14 +39,6 @@ const ViewJob = (props) => {
                     <p>{start.description}</p>
                     <p>Updated on {updated}</p>
                     <p>{props.data.cwfollowupJob.jobStatus.name}</p>
-                    <Link as={Button} to={{
-                        pathname: '/cwfollowup/job-form/duplicate/',
-                        state: {
-                            jobId: props.match.params.jobId
-                        }
-                    }} activeClassName="selected" exact match={props.match} router={props.router}>
-                      Duplicate job
-                    </Link>
                     <PrivacyToggle 
                         userId={userId} 
                         jobId={props.match.params.jobId} 
