@@ -29,7 +29,7 @@ spec:
             - secretRef:
                 name: common
           name: gwlab-cwfollowup-django
-          image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_django:0.7
+          image: nexus.gwdc.org.au/docker/gwlab_cwfollowup_django:0.8
           ports:
             - name: http
               containerPort: 8000
