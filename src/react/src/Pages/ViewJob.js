@@ -31,7 +31,10 @@ const ViewJob = (props) => {
                             <Col md={8}>
                                 <Tab.Content>
                                     <Tab.Pane eventKey="parameters">
-                                        <Parameters candidateGroup={jobData.candidateGroup} followups={jobData.followups}/>
+                                        <Parameters
+                                            candidateGroup={jobData.candidateGroup}
+                                            followups={jobData.followups}
+                                        />
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="results">
                                         <Files jobId={jobData.id} {...props}/>
