@@ -3,7 +3,7 @@ import {commitMutation, createFragmentContainer, graphql} from 'react-relay';
 import {harnessApi} from '../../index';
 import filesize from 'filesize';
 
-const downloadUrl = 'https://gwcloud.org.au/job/apiv1/file/?fileId=';
+const downloadUrl = 'https://jobcontroller.adacs.org.au/job/apiv1/file/?fileId=';
 
 const getFileDownloadIdMutation = graphql`
   mutation ResultFileMutation($input: GenerateFileDownloadIdsInput!) {
